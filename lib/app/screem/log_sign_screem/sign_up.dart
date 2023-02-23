@@ -138,7 +138,7 @@ class _SignUpScreemState extends State<SignUpScreem> {
                               // });
                             } else {
                               setState(() {
-                                signInLoading = false;
+                              signInLoading = false;
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
