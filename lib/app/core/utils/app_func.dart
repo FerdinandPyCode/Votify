@@ -1,19 +1,12 @@
-import 'package:clavero/utils/app_styles.dart';
-import 'package:clavero/utils/providers.dart';
-import 'package:enum_to_string/enum_to_string.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flushbar/flutter_flushbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:learning_input_image/learning_input_image.dart';
-import 'package:learning_text_recognition/learning_text_recognition.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-
-import '../components/app_text.dart';
-import '../screens/login_page.dart';
-import 'app_const.dart';
+import 'package:votify_2/app/core/constants/color.dart';
+import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/screem/log_sign_screem/login.dart';
 
 log(dynamic text) {
   if (kDebugMode) {
@@ -21,9 +14,6 @@ log(dynamic text) {
   }
 }
 
-enum2String(enumItem) {
-  return EnumToString.convertToString(enumItem);
-}
 
 Size getSize(BuildContext context) {
   return MediaQuery.of(context).size;
@@ -77,9 +67,9 @@ showSnackBar(BuildContext context, String message, {String closeMsg = "OK"}) {
   final snackBar = SnackBar(
     content: Text(
       message,
-      style: TextStyle(color: getBlack(context), fontWeight: FontWeight.w700),
+      style: TextStyle(color: AppColors.blackColor, fontWeight: FontWeight.w700),
     ),
-    backgroundColor: getWhite(context),
+    backgroundColor: AppColors.whiteOpac,
     behavior: SnackBarBehavior.floating,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -87,7 +77,7 @@ showSnackBar(BuildContext context, String message, {String closeMsg = "OK"}) {
     duration: const Duration(seconds: 3),
     action: SnackBarAction(
       label: closeMsg,
-      textColor: secondaryColor,
+      textColor: AppColors.redColor,
       onPressed: () {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
       },
@@ -151,7 +141,7 @@ showLogoutModal(BuildContext context, WidgetRef ref) {
       context: context,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-      backgroundColor: backgroundDefaultScaffold,
+      backgroundColor: AppColors.backgroundColor,
       builder: (context) {
         return Container(
           height: getSize(context).height / 1.5,
@@ -168,13 +158,13 @@ showLogoutModal(BuildContext context, WidgetRef ref) {
               InkWell(
                 onTap: () async {
                   showFlushBar(context, "Information", "Déconnexion effectuée...");
-                  await ref.read(mAuthRef).signOut();
+                  //await ref.read(mAuthRef).signOut();
                   //AppLock.of(context)!.disable();
                   Navigator.pushAndRemoveUntil(
                       context,
                       PageRouteBuilder(
                           pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-                        return const LoginPage();
+                        return const LoginScreem();
                       }, transitionsBuilder: (BuildContext context, Animation<double> animation,
                               Animation<double> secondaryAnimation, Widget child) {
                         return SlideTransition(
@@ -220,84 +210,43 @@ showLogoutModal(BuildContext context, WidgetRef ref) {
       });
 }
 
-void showConfirmAlert(
-  BuildContext context,
-  String title,
-  String message,
-  String confirmText,
-  String rejectText,
-  Function() onPressed,
-) {
-  Alert(
-    context: context,
-    type: AlertType.warning,
-    title: title,
-    desc: message,
-    onWillPopActive: true,
-    useRootNavigator: false,
-    closeFunction: () {
-      Navigator.pop(context);
-    },
-    buttons: [
-      DialogButton(
-        child: AppText(
-          confirmText,
-          color: Colors.white,
-        ),
-        onPressed: onPressed,
-        width: 120,
-      ),
-      DialogButton(
-        child: AppText(
-          rejectText,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        width: 120,
-      )
-    ],
-  ).show();
-}
-
-Future<String> getCroppedResult(String file) async {
-  CroppedFile? croppedFile = await ImageCropper().cropImage(
-    sourcePath: file,
-    // aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 0.15),
-    aspectRatioPresets: [
-      CropAspectRatioPreset.square,
-      CropAspectRatioPreset.ratio3x2,
-      CropAspectRatioPreset.original,
-      CropAspectRatioPreset.ratio4x3,
-      CropAspectRatioPreset.ratio16x9
-    ],
-    maxHeight: 100,
-    uiSettings: [
-      AndroidUiSettings(
-          toolbarTitle: 'Rogner',
-          toolbarColor: primaryColor_,
-          toolbarWidgetColor: Colors.white,
-          //initAspectRatio: CropAspectRatioPreset.ratio16x9,
-          lockAspectRatio: false),
-      IOSUiSettings(title: 'Rogner', minimumAspectRatio: 0.5),
-      // WebUiSettings(
-      //   context: context,
-      // ),
-    ],
-  );
-  if (croppedFile != null) {
-    return croppedFile.path;
-  } else {
-    return file;
-  }
-}
-
-Future<String> getTextFromImage(String path) async {
-  TextRecognition textRecognition = TextRecognition();
-  RecognizedText? result = await textRecognition.process(InputImage.fromFilePath(path));
-  if (result == null) {
-    return "";
-  }
-  return result.text.replaceAll("\n", " ");
-}
+// void showConfirmAlert(
+//   BuildContext context,
+//   String title,
+//   String message,
+//   String confirmText,
+//   String rejectText,
+//   Function() onPressed,
+// ) {
+//   Alert(
+//     context: context,
+//     type: AlertType.warning,
+//     title: title,
+//     desc: message,
+//     onWillPopActive: true,
+//     useRootNavigator: false,
+//     closeFunction: () {
+//       Navigator.pop(context);
+//     },
+//     buttons: [
+//       DialogButton(
+//         child: AppText(
+//           confirmText,
+//           color: Colors.white,
+//         ),
+//         onPressed: onPressed,
+//         width: 120,
+//       ),
+//       DialogButton(
+//         child: AppText(
+//           rejectText,
+//           color: Colors.white,
+//         ),
+//         onPressed: () {
+//           Navigator.pop(context);
+//         },
+//         width: 120,
+//       )
+//     ],
+//   ).show();
+// }

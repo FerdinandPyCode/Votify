@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/models/user_model.dart';
+import 'package:votify_2/app/core/utils/app_func.dart';
+import 'package:votify_2/app/screem/log_sign_screem/activation_compte.dart';
 import '../../core/constants/asset_data.dart';
 import '../../core/constants/color.dart';
 import '../../core/constants/strings.dart';
@@ -116,14 +118,16 @@ class _SignUpScreemState extends State<SignUpScreem> {
                       : DynamiqueButton(
                           action: () {
                             if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                signInLoading = true;
-                              });
+                              // setState(() {
+                              //   signInLoading = true;
+                              // });
                               userModel.email = textEditingControllerEmail.text;
                               userModel.password =
                                   textEditingControllerPassword.text;
                               userModel.username =
                                   textEditingControllerUserName.text;
+                              navigateToNextPage(
+                                  context, const ConfirmationCodePage());
                               // auth
                               //     .register(
                               //         user: userModel,
@@ -138,7 +142,7 @@ class _SignUpScreemState extends State<SignUpScreem> {
                               // });
                             } else {
                               setState(() {
-                              signInLoading = false;
+                                signInLoading = false;
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

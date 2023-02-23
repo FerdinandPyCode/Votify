@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_input.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
+import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/screem/home_screem/home_screem.dart';
 
 import '../../core/constants/color.dart';
@@ -118,14 +119,11 @@ class _LoginScreemState extends State<LoginScreem> {
                       : DynamiqueButton(
                           action: () {
                             if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                signInLoading = true;
-                              });
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MyHomeScreem()));
+                              // setState(() {
+                              //   signInLoading = true;
+                              // });
+                              navigateToNextPage(context, const MyHomeScreem(),
+                                  back: false);
                             } else {
                               setState(() {
                                 signInLoading = false;
