@@ -6,9 +6,9 @@ class UserModel {
   String lastName;
   String adress;
   String phone;
-  bool isVoteAdmin = false;
-  bool isVerified = false;
-  bool isActive = false;
+  // bool isVoteAdmin = false;
+  // bool isVerified = false;
+  // bool isActive = false;
 
   UserModel({
     this.id = -1,
@@ -18,9 +18,9 @@ class UserModel {
     required this.firstName,
     required this.adress,
     required this.phone,
-    this.isActive = true,
-    this.isVerified = false,
-    this.isVoteAdmin = false,
+    // this.isActive = true,
+    // this.isVerified = false,
+    // this.isVoteAdmin = false,
   });
 
   factory UserModel.initial() => UserModel(
@@ -39,9 +39,9 @@ class UserModel {
       firstName: jsonData['first_name'],
       adress: jsonData['address'],
       phone: jsonData['phone'],
-      isActive: jsonData['is_active'],
-      isVerified: jsonData['is_verified'],
-      isVoteAdmin: jsonData['is_vote_admin'],
+      // isActive: jsonData['is_active'],
+      // isVerified: jsonData['is_verified'],
+      // isVoteAdmin: jsonData['is_vote_admin'],
     );
   }
 // {
@@ -52,6 +52,7 @@ class UserModel {
 //   "phone": "string",
 //   "email": "hernandezdecos96@gmail.com"
 // }
+
 //Recuperer la liste totale des utilisateurs
   static List<UserModel> tolist(List jsonData) {
     List<UserModel> users = [];
@@ -70,9 +71,9 @@ class UserModel {
       "address": adress,
       "phone": phone,
       "email": email,
-      "is_active": isActive.toString(),
-      "is_verified": isVerified.toString(),
-      "is_vote_admin": isVoteAdmin.toString(),
+      // "is_active": isActive.toString(),
+      // "is_verified": isVerified.toString(),
+      // "is_vote_admin": isVoteAdmin.toString(),
     };
     return map;
   }

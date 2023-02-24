@@ -14,6 +14,7 @@ class DioClient {
   getHeaders(bool withAuthorization) {
     Map<String, String> header = {
       'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
     };
     if (withAuthorization) {
       // add to header the authorisations flags*
@@ -61,8 +62,7 @@ class DioClient {
   }
 
   Future<Response> post(
-    String uri,
-    {
+    String uri, {
     data,
     bool withAuthorization = false,
     Map<String, dynamic>? queryParameters,
@@ -90,8 +90,7 @@ class DioClient {
   }
 
   Future<Response> put(
-    String uri,
-    {
+    String uri, {
     data,
     bool withAuthorization = false,
     Map<String, dynamic>? queryParameters,
@@ -119,8 +118,7 @@ class DioClient {
   }
 
   Future<Response> delete(
-    String uri,
-    {
+    String uri, {
     data,
     bool withAuthorization = false,
     Map<String, dynamic>? queryParameters,

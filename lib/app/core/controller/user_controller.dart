@@ -27,11 +27,11 @@ class UserController {
     try {
       logd('Avant le post de dio');
       await ref.read(dio).post(myUrl, data: data).then((value) async {
-        logd('resulllllllllllllltat');
         logd(value);
         if (value.statusCode == 200) {
           ref.read(userAuth.notifier).token = value.data['refresh'];
           HelperPreferences.saveStringValue("TOKEN_KEY", value.data['refresh']);
+          ref.refresh(dio);
           await getMe();
           result.data = true;
         } else {
