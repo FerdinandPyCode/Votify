@@ -27,7 +27,7 @@ class UserController {
     try {
       logd('Avant le post de dio');
       await ref.read(dio).post(myUrl, data: data).then((value) async {
-        logd(value);
+        
         if (value.statusCode == 200) {
           ref.read(userAuth.notifier).token = value.data['refresh'];
           HelperPreferences.saveStringValue("TOKEN_KEY", value.data['refresh']);
@@ -53,8 +53,8 @@ class UserController {
 
     try {
       logd(data);
-      
-      await ref.read(dio).post(myUrl, data:data).then((value) {
+       logd('Avant le post de dio');
+      await ref.read(dio).post(myUrl, data: data).then((value) {
         logd(value);
         if (value.statusCode == 201) {
           UserModel data = UserModel.fromMap(value.data);

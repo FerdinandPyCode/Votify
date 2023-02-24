@@ -123,10 +123,10 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
 
                               Map<String, String> map = {
                                 "username": textEditingControllerUserName.text,
-                                "first_name": "",
-                                "last_name": "",
-                                "address": "",
-                                "phone": "",
+                                "first_name": 'None',
+                                "last_name": 'None',
+                                "address": "None",
+                                "phone": "None",
                                 "email": textEditingControllerEmail.text,
                                 "password": textEditingControllerPassword.text,
                                 "re_password":
