@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_input.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
 import 'package:votify_2/app/screem/home_screem/home_screem.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/constants/strings.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/app_text.dart';
 
-class LoginScreem extends StatefulWidget {
+class LoginScreem extends ConsumerStatefulWidget {
   const LoginScreem({super.key});
 
   @override
-  State<LoginScreem> createState() => _LoginScreemState();
+  ConsumerState<LoginScreem> createState() => _LoginScreemState();
 }
 
-class _LoginScreemState extends State<LoginScreem> {
+class _LoginScreemState extends ConsumerState<LoginScreem> {
   var _formKey = GlobalKey<FormState>();
   late bool signInLoading;
   late bool googleIsLoading;
@@ -117,17 +119,37 @@ class _LoginScreemState extends State<LoginScreem> {
                           color: AppColors.blueBgColor,
                         )
                       : DynamiqueButton(
-                          action: () {
+                          action: () async {
                             if (_formKey.currentState!.validate()) {
-                              // setState(() {
-                              //   signInLoading = true;
-                              // });
-                              navigateToNextPage(context, const MyHomeScreem(),
-                                  back: false);
-                            } else {
+                              setState(() {
+                                signInLoading = true;
+                              });
+
+                              await ref
+                                  .read(userController)
+                                  .loginUser(textEditingControllerEmail.text,
+                                      textEditingControllerPassword.text)
+                                  .then((value) {
+                                if (value.data) {
+                                  showFlushBar(context, "Connection",
+                                      "Vous êtes connectés avec succès !!!");
+                                  navigateToNextPage(
+                                      context, const MyHomeScreem(),
+                                      back: false);
+                                } else {
+                                  showFlushBar(
+                                      context,
+                                      "Erreur de Connection",
+                                      value.error ??
+                                          "Oops ! Une erreur est survenue");
+                                }
+                              });
+
                               setState(() {
                                 signInLoading = false;
                               });
+                              
+                            } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content: AppText(
