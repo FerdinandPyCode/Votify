@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
-
 import 'package:votify_2/app/screem/voting_screems/user_vote.dart';
 import 'package:votify_2/app/screem/voting_screems/voting_progress.dart';
-
 import '../../core/constants/strings.dart';
 import '../../core/generated/my_app_bar.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation.dart';

@@ -122,8 +122,8 @@ class _SignUpScreemState extends State<SignUpScreem> {
                               //   signInLoading = true;
                               // });
                               userModel.email = textEditingControllerEmail.text;
-                              userModel.password =
-                                  textEditingControllerPassword.text;
+                              // userModel.password =
+                              //     textEditingControllerPassword.text;
                               userModel.username =
                                   textEditingControllerUserName.text;
                               navigateToNextPage(

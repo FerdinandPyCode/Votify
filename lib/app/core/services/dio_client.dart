@@ -2,37 +2,41 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:votify_2/app/core/constants/conf.dart';
-
 import 'logging_interceptor.dart';
-
-final dio = Provider((ref) => DioClient(ConfString.BASE_URL));
 
 class DioClient {
   final String baseUrl;
   LoggingInterceptor? loggingInterceptor = LoggingInterceptor();
 
   Dio dio = Dio();
-  String? token = "";
+  String tokens = "";
 
-  DioClient(this.baseUrl) {
+  getHeaders(bool withAuthorization) {
+    Map<String, String> header = {
+      'Accept': 'application/json',
+    };
+    if (withAuthorization) {
+      // add to header the authorisations flags*
+      header["Authorization"] = 'Bearer $tokens';
+    }
+    return header;
+  }
+
+  DioClient(this.baseUrl, this.tokens) {
     //token = sharedPreferences.getString(AppConstants.TOKEN);
     //print(token);
     dio
       ..options.baseUrl = baseUrl
       ..options.connectTimeout = const Duration(seconds: 5)
       ..options.receiveTimeout = const Duration(seconds: 3)
-      ..httpClientAdapter
-      ..options.headers = {
-        'Content-Type': 'application/json; charset=UTF-8',
-        //'Authorization': 'Bearer $token'
-      };
+      ..httpClientAdapter;
+
     dio.interceptors.add(loggingInterceptor!);
   }
 
   Future<Response> get(
-    String uri, {
+    String uri,
+    bool withAuthorization, {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -42,7 +46,7 @@ class DioClient {
       var response = await dio.get(
         uri,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: getHeaders(withAuthorization)),
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
@@ -57,8 +61,10 @@ class DioClient {
   }
 
   Future<Response> post(
-    String uri, {
+    String uri,
+    {
     data,
+    bool withAuthorization = false,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -70,7 +76,7 @@ class DioClient {
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: getHeaders(withAuthorization)),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -84,8 +90,10 @@ class DioClient {
   }
 
   Future<Response> put(
-    String uri, {
+    String uri,
+    {
     data,
+    bool withAuthorization = false,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -97,7 +105,7 @@ class DioClient {
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: getHeaders(withAuthorization)),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -111,8 +119,10 @@ class DioClient {
   }
 
   Future<Response> delete(
-    String uri, {
+    String uri,
+    {
     data,
+    bool withAuthorization = false,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -122,7 +132,7 @@ class DioClient {
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: getHeaders(withAuthorization)),
         cancelToken: cancelToken,
       );
       return response;
@@ -133,10 +143,10 @@ class DioClient {
     }
   }
 
-  getHeaders() {
+  getHeaders2() {
     Map<String, String> header = {
       'Accept': 'application/json',
-      "Authorization": 'Bearer $token',
+      "Authorization": 'Bearer $tokens',
       'Content-Type': 'multipart/form-data'
     };
     return header;
@@ -145,11 +155,10 @@ class DioClient {
   Future<dynamic> postFile({required FormData body, String url = ''}) async {
     Response result;
     try {
-      
       result = await dio.post(url,
           data: body,
           options: Options(
-            headers: getHeaders(),
+            headers: getHeaders2(),
           ));
       return result;
     } on DioError catch (e) {
