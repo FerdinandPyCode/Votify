@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:votify_2/app/screem/spash_screem/first_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

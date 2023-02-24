@@ -14,7 +14,7 @@ class UserAuth extends ChangeNotifier {
 
 class UserController {
   final Ref ref;
-  String url = ConfString.BASE_URL + ConfString.AUTH_URL;
+  String url = ConfString.AUTH_URL;
   UserController(this.ref);
 
   Future<FetchData> loginUser(String email, String password) async {
@@ -25,7 +25,10 @@ class UserController {
     Map<String, String> data = {'email': email, 'password': password};
 
     try {
+      logd('Avant le post de dio');
       await ref.read(dio).post(myUrl, data: data).then((value) async {
+        logd('resulllllllllllllltat');
+        logd(value);
         if (value.statusCode == 200) {
           ref.read(userAuth.notifier).token = value.data['refresh'];
           HelperPreferences.saveStringValue("TOKEN_KEY", value.data['refresh']);
@@ -98,3 +101,6 @@ class UserController {
     });
   }
 }
+
+//hernandezdecos96@gmail.com
+//Password229@
