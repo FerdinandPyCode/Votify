@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
+import 'package:votify_2/app/core/utils/helper_preferences.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timer_controller/timer_controller.dart';
+import 'package:votify_2/app/screem/home_screem/home_screem.dart';
+import 'package:votify_2/app/screem/log_sign_screem/login.dart';
+import 'package:votify_2/app/screem/spash_screem/last_splash.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -28,13 +33,28 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   Widget build(BuildContext context) {
     return TimerControllerListener(
       listener: (BuildContext context, TimerValue value) async {
+        bool isToken = await HelperPreferences.checkKey("TOKEN_KEY");
+        String token = "";
+        bool authed = false;
 
-        String token 
-        if (ref.watch(mAuthRef).currentUser == null) {
-          navigateToNextPage(context, const LoginPage(), back: false);
+        if (isToken) {
+          token = await HelperPreferences.retrieveStringValue("TOKEN_KEY");
+          if (Jwt.getExpiryDate(token)!.millisecondsSinceEpoch >
+              DateTime.now().millisecondsSinceEpoch) {
+            authed = true;
+          }
+        }
+
+        if (authed) {
+          navigateToNextPage(context, const MyHomeScreem(), back: false);
         } else {
-          // await ref.read(userController).setupUser();
-          // navigateToNextPage(context, const HomePage(), back: false);
+          bool first = await HelperPreferences.checkKey("FIRST_TIME");
+          if (!first) {
+            await HelperPreferences.saveStringValue("FIRST_TIME", "1");
+            navigateToNextPage(context, const LastSplashScreem());
+          } else {
+            navigateToNextPage(context, const LoginScreem(), back: false);
+          }
         }
         _controller.dispose();
       },
