@@ -50,7 +50,7 @@ factory UserModel.fromMap(Map<String,dynamic> jsonData){
     isActive: jsonData['is_active'], 
     isAdmin:jsonData['is_admin'], 
     isStaff: jsonData['is_staff'], 
-    isVerified: jsonData['is_verified'], 
+    isVerified: jsonData['is_verified'],
     isVoteAdmin: jsonData['is_vote_admin'], 
     createdAt: jsonData['created_at'], 
     updateAt: jsonData['updated_at']

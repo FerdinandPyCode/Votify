@@ -8,7 +8,7 @@ import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
 import 'package:votify_2/app/screem/log_sign_screem/login.dart';
 
-log(dynamic text) {
+logd(dynamic text) {
   if (kDebugMode) {
     print(text);
   }
@@ -125,8 +125,8 @@ void showLoadingDialog(BuildContext context) {
 }
 
 Center errorLoading(err, stack) {
-  log(err);
-  log(stack);
+  logd(err);
+  logd(stack);
   return const Center(child: Text("Une erreur s'est produite pendant le chargement...."));
 }
 
