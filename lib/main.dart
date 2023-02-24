@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:votify_2/app/screem/spash_screem/first_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:votify_2/app/screem/spash_screem/last_splash.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const FirstSplashScreem(),
+      home: const LastSplashScreem(),
     );
   }
 }

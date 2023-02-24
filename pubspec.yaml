@@ -54,6 +54,7 @@ dependencies:
   pin_code_fields:
   flutter_riverpod:
   flutter_flushbar:
+  timer_controller:
 
 dev_dependencies:
   flutter_test:

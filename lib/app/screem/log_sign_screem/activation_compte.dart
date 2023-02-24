@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
 import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
-import 'package:votify_2/app/screem/home_screem/home_screem.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
+import 'package:votify_2/app/screem/log_sign_screem/login.dart';
 
-class ConfirmationCodePage extends StatefulWidget {
+class ConfirmationCodePage extends ConsumerStatefulWidget {
   UserModel userModel;
 
   ConfirmationCodePage({super.key, required this.userModel});
@@ -15,7 +17,7 @@ class ConfirmationCodePage extends StatefulWidget {
   _ConfirmationCodePageState createState() => _ConfirmationCodePageState();
 }
 
-class _ConfirmationCodePageState extends State<ConfirmationCodePage> {
+class _ConfirmationCodePageState extends ConsumerState<ConfirmationCodePage> {
   String _pinCode = "";
   bool isLoading = false;
 
@@ -62,14 +64,36 @@ class _ConfirmationCodePageState extends State<ConfirmationCodePage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                child: const Text("Confirmer"),
-                onPressed: () {
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text("Confirmer"),
+                onPressed: () async {
                   if (_pinCode.length == 4) {
-                    // Validation du code de confirmation
-                    // Faire quelque chose
+                    setState(() {
+                      isLoading = true;
+                    });
+                    await ref
+                        .read(userController)
+                        .activeAccount(widget.userModel.email, _pinCode)
+                        .then((value) {
+                      if (value) {
+                        showFlushBar(context, "Activation de compte",
+                            "Compte activé avec succès !!!!!!");
+                        navigateToNextPage(context, const LoginScreem(),
+                            back: false);
+                      } else {
+                        showFlushBar(context, "Activation de compte",
+                            "Erreur lors de l'activation de compte, veuillez vérifier votre code !");
+                      }
+                    });
+
+                    setState(() {
+                      isLoading = false;
+                    });
+                  } else {
+                    showFlushBar(context, "Activation de compte",
+                        "Veuillez remplir tous les champs");
                   }
-                  navigateToNextPage(context, const MyHomeScreem(),
-                      back: false);
                 },
               )
             ],

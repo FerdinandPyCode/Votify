@@ -27,7 +27,6 @@ class UserController {
     try {
       logd('Avant le post de dio');
       await ref.read(dio).post(myUrl, data: data).then((value) async {
-        
         if (value.statusCode == 200) {
           ref.read(userAuth.notifier).token = value.data['refresh'];
           HelperPreferences.saveStringValue("TOKEN_KEY", value.data['refresh']);
@@ -53,7 +52,7 @@ class UserController {
 
     try {
       logd(data);
-       logd('Avant le post de dio');
+      logd('Avant le post de dio');
       await ref.read(dio).post(myUrl, data: data).then((value) {
         logd(value);
         if (value.statusCode == 201) {
@@ -70,15 +69,21 @@ class UserController {
     return result;
   }
 
-  // getUser(int userId) async {
-  //   FetchData data = await getWhere({"user_id": userId});
-  //   logd(data);
-  //   if (data.data.isNotEmpty) {
-  //     return data.data.first;
-  //   } else {
-  //     return UserModel.initial();
-  //   }
-  // }
+  Future<bool> activeAccount(String email, String code) async {
+    String myUrl = '${url}users/activation/$email/$code/';
+
+    await ref.read(dio).get(myUrl, true).then((value) {
+      logd(value);
+      if (value.statusCode == 200) {
+        if (value.data['message'] == 'Account activted successfully') {
+          return true;
+        }
+      } else {
+        logd(value.data['message']);
+      }
+    });
+    return false;
+  }
 
   getMe() async {
     String myUrl = '${url}users/me/';
