@@ -47,35 +47,28 @@ class UserController {
     return result;
   }
 
-  //   createUser(UserModel userModel) async {
-  //   FetchData data = await getWhere({"email": userModel.email});
-  //   if (data.error!.isNotEmpty) {
-  //     return data.error;
-  //   }
-  //   List<UserModel> users = data.data;
-  //   if (users.isNotEmpty) {
-  //     return "Ce email est déjà utilisé par un autre utilisateur";
-  //   }
-  //   String error = "";
-  //   try {
-  //     await ref
-  //         .read(mAuthRef)
-  //         .createUserWithEmailAndPassword(
-  //             email: userModel.email, password: userModel.password)
-  //         .then((value) async {
-  //       if (ref.read(mAuthRef).currentUser != null) {
-  //         userModel.user_id = ref.read(mAuthRef).currentUser!.uid;
-  //         userModel.fcm = (await FirebaseMessaging.instance.getToken())!;
-  //         await ref.read(userRepo).create(userModel);
-  //         //saveUser(userModel);
-  //       }
-  //       return value;
-  //     });
-  //   } catch (e) {
-  //     error = e.toString();
-  //   }
-  //   return error;
-  // }
+  Future<FetchData> createUser(Map<String, String> data) async {
+    FetchData result = FetchData(data: null, error: "");
+    String myUrl = '${url}users/';
+
+    try {
+      logd(data);
+      
+      await ref.read(dio).post(myUrl, data:data).then((value) {
+        logd(value);
+        if (value.statusCode == 201) {
+          UserModel data = UserModel.fromMap(value.data);
+          result.data = data;
+        } else {
+          result.error =
+              "Une erreur s'est produite... (${value.statusMessage})";
+        }
+      });
+    } catch (e) {
+      result.error = e.toString();
+    }
+    return result;
+  }
 
   // getUser(int userId) async {
   //   FetchData data = await getWhere({"user_id": userId});

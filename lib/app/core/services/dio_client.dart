@@ -13,7 +13,7 @@ class DioClient {
 
   getHeaders(bool withAuthorization) {
     Map<String, String> header = {
-      'Accept': 'application/json',
+      //'Accept': 'application/json',
       'Content-Type': 'application/json; charset=UTF-8',
     };
     if (withAuthorization) {

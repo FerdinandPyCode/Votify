@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/screem/home_screem/home_screem.dart';
 
 class ConfirmationCodePage extends StatefulWidget {
-  const ConfirmationCodePage({super.key});
+  UserModel userModel;
+
+  ConfirmationCodePage({super.key, required this.userModel});
 
   @override
   _ConfirmationCodePageState createState() => _ConfirmationCodePageState();

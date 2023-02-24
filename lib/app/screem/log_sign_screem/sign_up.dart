@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:votify_2/app/core/models/user_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
 import 'package:votify_2/app/screem/log_sign_screem/activation_compte.dart';
 import '../../core/constants/asset_data.dart';
 import '../../core/constants/color.dart';
@@ -9,14 +10,14 @@ import '../../core/generated/widgets/app_input_end_text_widget/app_input.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/app_text.dart';
 import '../../core/generated/dynamique_button.dart';
 
-class SignUpScreem extends StatefulWidget {
+class SignUpScreem extends ConsumerStatefulWidget {
   const SignUpScreem({super.key});
 
   @override
-  State<SignUpScreem> createState() => _SignUpScreemState();
+  ConsumerState<SignUpScreem> createState() => _SignUpScreemState();
 }
 
-class _SignUpScreemState extends State<SignUpScreem> {
+class _SignUpScreemState extends ConsumerState<SignUpScreem> {
   var _formKey = GlobalKey<FormState>();
   late bool signInLoading;
   late bool googleIsLoading;
@@ -24,8 +25,6 @@ class _SignUpScreemState extends State<SignUpScreem> {
   TextEditingController textEditingControllerEmail = TextEditingController();
   TextEditingController textEditingControllerPassword = TextEditingController();
   TextEditingController textEditingControllerUserName = TextEditingController();
-  UserModel userModel = UserModel
-      .defaultValue; //Déclaration de l'utilisateur avec des valeur par défaut
 
   @override
   void initState() {
@@ -116,34 +115,49 @@ class _SignUpScreemState extends State<SignUpScreem> {
                           color: AppColors.blueBgColor,
                         )
                       : DynamiqueButton(
-                          action: () {
+                          action: () async {
                             if (_formKey.currentState!.validate()) {
-                              // setState(() {
-                              //   signInLoading = true;
-                              // });
-                              userModel.email = textEditingControllerEmail.text;
-                              // userModel.password =
-                              //     textEditingControllerPassword.text;
-                              userModel.username =
-                                  textEditingControllerUserName.text;
-                              navigateToNextPage(
-                                  context, const ConfirmationCodePage());
-                              // auth
-                              //     .register(
-                              //         user: userModel,
-                              //         password:
-                              //             textEditingControllerPassword.text)
-                              //     .then((value) {
-                              //   if (value) {
-                              //     setState(() {
-                              //       signInLoading = false;
-                              //     });
-                              //   }
-                              // });
-                            } else {
+                              setState(() {
+                                signInLoading = true;
+                              });
+
+                              Map<String, String> map = {
+                                "username": textEditingControllerUserName.text,
+                                "first_name": "",
+                                "last_name": "",
+                                "address": "",
+                                "phone": "",
+                                "email": textEditingControllerEmail.text,
+                                "password": textEditingControllerPassword.text,
+                                "re_password":
+                                    textEditingControllerPassword.text
+                              };
+
+                              await ref
+                                  .read(userController)
+                                  .createUser(map)
+                                  .then(
+                                (value) {
+                                  if (value.data != null) {
+                                    showFlushBar(context, "Création de compte",
+                                        "Votre compte est créé avec succès !");
+                                    navigateToNextPage(
+                                        context,
+                                        ConfirmationCodePage(
+                                            userModel: value.data));
+                                  } else {
+                                    showFlushBar(context, "Création de compte",
+                                        "La création du compte à échouer");
+                                  }
+                                },
+                              );
+
                               setState(() {
                                 signInLoading = false;
                               });
+                              // navigateToNextPage(
+                              //     context, const ConfirmationCodePage());
+                            } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content: AppText(

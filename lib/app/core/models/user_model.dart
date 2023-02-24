@@ -1,5 +1,4 @@
 class UserModel {
-  int? id;
   String email;
   String username;
   String firstName;
@@ -11,7 +10,6 @@ class UserModel {
   // bool isActive = false;
 
   UserModel({
-    this.id = -1,
     required this.email,
     required this.username,
     required this.lastName,
@@ -94,6 +92,7 @@ class UserModel {
         lastName: '',
         phone: '',
         username: '',
-        email: '');
+        email: ''
+    );
   }
 }
