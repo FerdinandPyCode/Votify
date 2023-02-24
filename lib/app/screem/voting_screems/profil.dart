@@ -1,26 +1,27 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_simple_input.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
-
+import 'package:votify_2/app/core/utils/providers.dart';
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation.dart';
 import '../../core/generated/widgets/dial_button.dart';
 import '../../core/generated/widgets/utils/utils.dart';
 
-class ProfilScreem extends StatefulWidget {
+class ProfilScreem extends ConsumerStatefulWidget {
   const ProfilScreem({super.key});
 
   @override
-  State<ProfilScreem> createState() => _ProfilScreemState();
+  ConsumerState<ProfilScreem> createState() => _ProfilScreemState();
 }
 
-class _ProfilScreemState extends State<ProfilScreem> {
+class _ProfilScreemState extends ConsumerState<ProfilScreem> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _mailController = TextEditingController();
@@ -147,7 +148,7 @@ class _ProfilScreemState extends State<ProfilScreem> {
                               ),
                             ),
                             border: InputBorder.none,
-                            hintText: StringData.userNameExemple.split(' ')[0],
+                            hintText: ref.read(userAuth).me.lastName,
                             hintStyle: TextStyle(
                                 color: AppColors.blackColor,
                                 fontWeight: FontWeight.bold,
@@ -205,7 +206,7 @@ class _ProfilScreemState extends State<ProfilScreem> {
                               ),
                             ),
                             border: InputBorder.none,
-                            hintText: StringData.userNameExemple.split(' ')[1],
+                            hintText: ref.read(userAuth).me.firstName,
                             hintStyle: TextStyle(
                                 color: AppColors.blackColor,
                                 fontWeight: FontWeight.bold,
@@ -261,7 +262,7 @@ class _ProfilScreemState extends State<ProfilScreem> {
                               ),
                             ),
                             border: InputBorder.none,
-                            hintText: StringData.mailExemple,
+                            hintText: ref.read(userAuth).me.email,
                             hintStyle: TextStyle(
                                 color: AppColors.blackColor,
                                 fontWeight: FontWeight.bold,
@@ -318,7 +319,7 @@ class _ProfilScreemState extends State<ProfilScreem> {
                               ),
                             ),
                             border: InputBorder.none,
-                            hintText: StringData.userNameExemple,
+                            hintText: '***********',
                             hintStyle: TextStyle(
                                 color: AppColors.blackColor,
                                 fontWeight: FontWeight.bold,

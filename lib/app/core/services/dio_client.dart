@@ -28,8 +28,8 @@ class DioClient {
     //print(token);
     dio
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout = const Duration(seconds: 5)
-      ..options.receiveTimeout = const Duration(seconds: 3)
+      ..options.connectTimeout = const Duration(seconds: 15)
+      ..options.receiveTimeout = const Duration(seconds: 15)
       ..httpClientAdapter;
 
     dio.interceptors.add(loggingInterceptor!);

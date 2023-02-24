@@ -50,7 +50,7 @@ class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                StringData.hi + ref.read(userAuth).me.username,
+                '${StringData.hi} ${ref.read(userAuth).me.username} 👋',
                 color: AppColors.blackColor,
                 weight: FontWeight.bold,
                 size: 20.0,
