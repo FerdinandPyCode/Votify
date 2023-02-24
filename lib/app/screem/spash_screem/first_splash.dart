@@ -46,6 +46,9 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         }
 
         if (authed) {
+          ref.read(userAuth.notifier).token = token;
+          
+          await ref.read(userController).getMe();
           navigateToNextPage(context, const MyHomeScreem(), back: false);
         } else {
           bool first = await HelperPreferences.checkKey("FIRST_TIME");

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
 import 'package:votify_2/app/screem/home_screem/home_screem.dart';
 
@@ -10,14 +11,14 @@ import '../../core/generated/widgets/dial_button.dart';
 import '../../core/generated/widgets/polls_container.dart';
 import '../../core/generated/widgets/search_widget.dart';
 
-class SearchScreem extends StatefulWidget {
+class SearchScreem extends ConsumerStatefulWidget {
   const SearchScreem({super.key});
 
   @override
-  State<SearchScreem> createState() => _SearchScreemState();
+  ConsumerState<SearchScreem> createState() => _SearchScreemState();
 }
 
-class _SearchScreemState extends State<SearchScreem> {
+class _SearchScreemState extends ConsumerState<SearchScreem> {
   TextEditingController searchController = TextEditingController();
 
   @override

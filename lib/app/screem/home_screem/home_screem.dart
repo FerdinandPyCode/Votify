@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
 import 'package:votify_2/app/screem/voting_screems/user_vote.dart';
 import 'package:votify_2/app/screem/voting_screems/voting_progress.dart';
 import '../../core/constants/strings.dart';
@@ -14,16 +16,15 @@ import '../../core/generated/widgets/search_widget.dart';
 import '../voting_screems/vote_search_result_screem.dart';
 import '../voting_screems/voting_list.dart';
 
-class MyHomeScreem extends StatefulWidget {
+class MyHomeScreem extends ConsumerStatefulWidget {
   const MyHomeScreem({super.key});
 
   @override
-  State<MyHomeScreem> createState() => _MyHomeScreemState();
+  ConsumerState<MyHomeScreem> createState() => _MyHomeScreemState();
 }
 
-class _MyHomeScreemState extends State<MyHomeScreem> {
+class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
   TextEditingController searchController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class _MyHomeScreemState extends State<MyHomeScreem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                StringData.hi + StringData.userNameExemple.split(' ')[1],
+                StringData.hi + ref.read(userAuth).me.username,
                 color: AppColors.blackColor,
                 weight: FontWeight.bold,
                 size: 20.0,

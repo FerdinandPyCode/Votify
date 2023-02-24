@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/screem/voting_screems/final_vote.dart';
 
 import '../../core/constants/color.dart';
@@ -10,14 +11,14 @@ import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation
 import '../../core/generated/widgets/dial_button.dart';
 import '../../core/generated/widgets/polls_container.dart';
 
-class MyHistorieScreem extends StatefulWidget {
+class MyHistorieScreem extends ConsumerStatefulWidget {
   const MyHistorieScreem({super.key});
 
   @override
-  State<MyHistorieScreem> createState() => _MyHistorieScreemState();
+  ConsumerState<MyHistorieScreem> createState() => _MyHistorieScreemState();
 }
 
-class _MyHistorieScreemState extends State<MyHistorieScreem> {
+class _MyHistorieScreemState extends ConsumerState<MyHistorieScreem> {
   bool isPublic = true;
 //Preparation des données pour le graphique
   List<FlSpot> data = [
@@ -49,7 +50,6 @@ class _MyHistorieScreemState extends State<MyHistorieScreem> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
