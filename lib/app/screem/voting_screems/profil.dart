@@ -7,7 +7,10 @@ import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_simple_input.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/utils/app_func.dart';
+import 'package:votify_2/app/core/utils/helper_preferences.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
+import 'package:votify_2/app/screem/log_sign_screem/login.dart';
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation.dart';
@@ -41,6 +44,8 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
         leadingWidget: IconButton(
             onPressed: () {},
             icon: Icon(Icons.menu_sharp, color: AppColors.blueBgColor)),
+        isSecond: true,
+        disconnectWidget: disconnectWidget(),
       ),
       floatingActionButton: const FlotingActionButon(),
       bottomNavigationBar: const MyBottomNavigation(
@@ -385,6 +390,20 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
           ],
         );
       },
+    );
+  }
+
+  Widget disconnectWidget() {
+    return InkWell(
+      onTap: () {
+        HelperPreferences.clear();
+        navigateToNextPage(context, const LoginScreem(), back: false);
+      },
+      child: Icon(
+        Icons.logout,
+        color: AppColors.redColor,
+        size: 25,
+      ),
     );
   }
 }

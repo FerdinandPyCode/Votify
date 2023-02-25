@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
-
 import '../../screem/voting_screems/notification_screem.dart';
 import '../../screem/voting_screems/profil.dart';
 import '../constants/asset_data.dart';
@@ -10,8 +9,14 @@ import 'package:badges/badges.dart' as badges;
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   final Widget leadingWidget;
   final double nbrNotification;
-  const MyAppBar(
-      {super.key, required this.leadingWidget, this.nbrNotification = 1});
+  bool isSecond = false;
+  Widget? disconnectWidget;
+  MyAppBar(
+      {super.key,
+      required this.leadingWidget,
+      this.nbrNotification = 1,
+      this.isSecond = false,
+      this.disconnectWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -44,25 +49,28 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
       backgroundColor: AppColors.backgroundColor,
       leading: leadingWidget,
       actions: [
-        InkWell(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const ProfilScreem()));
-          },
-          child: CircleAvatar(
-            backgroundColor: AppColors.backgroundColor,
-            maxRadius: height * .06,
-            child: Image.asset(
-              AssetData.google,
-            ),
-          ),
-        )
+        isSecond
+            ? disconnectWidget!
+            : InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfilScreem()));
+                },
+                child: CircleAvatar(
+                  backgroundColor: AppColors.backgroundColor,
+                  maxRadius: height * .06,
+                  child: Image.asset(
+                    AssetData.google,
+                  ),
+                ),
+              )
       ],
       elevation: 0.0,
     );
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
