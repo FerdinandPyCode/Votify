@@ -1,24 +1,25 @@
-class UserModel {
-  String email;
-  String username;
-  String firstName;
-  String lastName;
-  String adress;
-  String phone;
-  // bool isVoteAdmin = false;
-  // bool isVerified = false;
-  // bool isActive = false;
+import 'dart:convert';
 
+class UserModel {
+  String userId = "";
+  String email = "";
+  String username = "";
+  String firstName = "";
+  String lastName = "";
+  String adress = "";
+  String phone = "";
+  String fcm = "";
+  String profilePic = "";
   UserModel({
+    required this.userId,
     required this.email,
     required this.username,
-    required this.lastName,
     required this.firstName,
+    required this.lastName,
     required this.adress,
     required this.phone,
-    // this.isActive = true,
-    // this.isVerified = false,
-    // this.isVoteAdmin = false,
+    required this.fcm,
+    required this.profilePic,
   });
 
   factory UserModel.initial() => UserModel(
@@ -27,72 +28,101 @@ class UserModel {
       lastName: "",
       firstName: "",
       adress: "",
-      phone: "");
+      phone: "",
+      fcm: "",
+      userId: "",
+      profilePic: "");
 
-  factory UserModel.fromMap(Map<String, dynamic> jsonData) {
+  UserModel copyWith({
+    String? userId,
+    String? email,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? adress,
+    String? phone,
+    String? fcm,
+    String? profilePic,
+  }) {
     return UserModel(
-      username: jsonData['username'],
-      email: jsonData['email'],
-      lastName: jsonData['last_name'],
-      firstName: jsonData['first_name'],
-      adress: jsonData['address'],
-      phone: jsonData['phone'],
-      // isActive: jsonData['is_active'],
-      // isVerified: jsonData['is_verified'],
-      // isVoteAdmin: jsonData['is_vote_admin'],
+      userId: userId ?? this.userId,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      adress: adress ?? this.adress,
+      phone: phone ?? this.phone,
+      fcm: fcm ?? this.fcm,
+      profilePic: profilePic ?? this.profilePic,
     );
   }
-// {
-//   "username": "ferdi",
-//   "first_name": "string",
-//   "last_name": "string",
-//   "address": "string",
-//   "phone": "string",
-//   "email": "hernandezdecos96@gmail.com"
-// }
 
-//Recuperer la liste totale des utilisateurs
-  static List<UserModel> tolist(List jsonData) {
-    List<UserModel> users = [];
-    for (dynamic data in jsonData) {
-      users.add(UserModel.fromMap(data));
-    }
-    return users;
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'userId': userId});
+    result.addAll({'email': email});
+    result.addAll({'username': username});
+    result.addAll({'firstName': firstName});
+    result.addAll({'lastName': lastName});
+    result.addAll({'adress': adress});
+    result.addAll({'phone': phone});
+    result.addAll({'fcm': fcm});
+    result.addAll({'profilePic': profilePic});
+
+    return result;
   }
 
-// Traduire les donnée de l'utilisateur en Map
-  Map<String, String> toMap() {
-    Map<String, String> map = {
-      "username": username,
-      "last_name": lastName,
-      "first_name": firstName,
-      "address": adress,
-      "phone": phone,
-      "email": email,
-      // "is_active": isActive.toString(),
-      // "is_verified": isVerified.toString(),
-      // "is_vote_admin": isVoteAdmin.toString(),
-    };
-    return map;
-  }
-
-  static List topMapList(List<UserModel> data) {
-    List mapList = [];
-    for (UserModel d in data) {
-      mapList.add(d.toMap());
-    }
-
-    return mapList;
-  }
-
-  static UserModel get defaultValue {
+  factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-        adress: '',
-        firstName: '',
-        lastName: '',
-        phone: '',
-        username: '',
-        email: ''
+      userId: map['userId'] ?? '',
+      email: map['email'] ?? '',
+      username: map['username'] ?? '',
+      firstName: map['firstName'] ?? '',
+      lastName: map['lastName'] ?? '',
+      adress: map['adress'] ?? '',
+      phone: map['phone'] ?? '',
+      fcm: map['fcm'] ?? '',
+      profilePic: map['profilePic'] ?? '',
     );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'UserModel(userId: $userId, email: $email, username: $username, firstName: $firstName, lastName: $lastName, adress: $adress, phone: $phone, fcm: $fcm, profilePic: $profilePic)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is UserModel &&
+        other.userId == userId &&
+        other.email == email &&
+        other.username == username &&
+        other.firstName == firstName &&
+        other.lastName == lastName &&
+        other.adress == adress &&
+        other.phone == phone &&
+        other.fcm == fcm &&
+        other.profilePic == profilePic;
+  }
+
+  @override
+  int get hashCode {
+    return userId.hashCode ^
+        email.hashCode ^
+        username.hashCode ^
+        firstName.hashCode ^
+        lastName.hashCode ^
+        adress.hashCode ^
+        phone.hashCode ^
+        fcm.hashCode ^
+        profilePic.hashCode;
   }
 }
