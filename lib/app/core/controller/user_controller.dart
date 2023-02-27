@@ -8,9 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:votify_2/app/core/constants/conf.dart';
 import 'package:votify_2/app/core/models/user_model.dart';
-import 'package:votify_2/app/core/services/parse_result.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
-import 'package:votify_2/app/core/utils/helper_preferences.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
 
 class UserAuth extends ChangeNotifier {
@@ -109,6 +107,7 @@ class UserController {
   Future<UserModel> getMyInfos() async {
     UserModel userModel =
         await UserController(ref).getUser(ref.read(mAuthRef).currentUser!.uid);
+    logd(userModel);
     ref.read(userAuth.notifier).me = userModel;
     return userModel;
   }
