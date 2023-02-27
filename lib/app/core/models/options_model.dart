@@ -28,12 +28,12 @@ class Option {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
+
     result.addAll({'code': code});
     result.addAll({'fullName': fullName});
     result.addAll({'imageUrl': imageUrl});
     result.addAll({'voteCounter': voteCounter});
-  
+
     return result;
   }
 
@@ -58,19 +58,19 @@ class Option {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is Option &&
-      other.code == code &&
-      other.fullName == fullName &&
-      other.imageUrl == imageUrl &&
-      other.voteCounter == voteCounter;
+        other.code == code &&
+        other.fullName == fullName &&
+        other.imageUrl == imageUrl &&
+        other.voteCounter == voteCounter;
   }
 
   @override
   int get hashCode {
     return code.hashCode ^
-      fullName.hashCode ^
-      imageUrl.hashCode ^
-      voteCounter.hashCode;
+        fullName.hashCode ^
+        imageUrl.hashCode ^
+        voteCounter.hashCode;
   }
 }

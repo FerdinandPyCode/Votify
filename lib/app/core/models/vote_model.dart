@@ -13,7 +13,7 @@ class Vote {
   String creator = '';
   List<String> votersEmail = [];
   List<Option> listeOptions = [];
-  
+
   Vote({
     required this.id,
     required this.title,
@@ -26,6 +26,18 @@ class Vote {
     required this.votersEmail,
     required this.listeOptions,
   });
+
+  factory Vote.initial() => Vote(
+      id: "",
+      title: "",
+      description: "",
+      dateState: "",
+      dateEnd: "",
+      electionType: "",
+      createAt: "",
+      creator: "",
+      votersEmail: [],
+      listeOptions: []);
 
   Vote copyWith({
     String? id,
@@ -55,7 +67,7 @@ class Vote {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
+
     result.addAll({'id': id});
     result.addAll({'title': title});
     result.addAll({'description': description});
@@ -65,8 +77,9 @@ class Vote {
     result.addAll({'createAt': createAt});
     result.addAll({'creator': creator});
     result.addAll({'votersEmail': votersEmail});
-    result.addAll({'listeOptions': listeOptions.map((x) => x.toMap()).toList()});
-  
+    result
+        .addAll({'listeOptions': listeOptions.map((x) => x.toMap()).toList()});
+
     return result;
   }
 
@@ -81,7 +94,8 @@ class Vote {
       createAt: map['createAt'] ?? '',
       creator: map['creator'] ?? '',
       votersEmail: List<String>.from(map['votersEmail']),
-      listeOptions: List<Option>.from(map['listeOptions']?.map((x) => Option.fromMap(x))),
+      listeOptions:
+          List<Option>.from(map['listeOptions']?.map((x) => Option.fromMap(x))),
     );
   }
 
@@ -97,31 +111,31 @@ class Vote {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is Vote &&
-      other.id == id &&
-      other.title == title &&
-      other.description == description &&
-      other.dateState == dateState &&
-      other.dateEnd == dateEnd &&
-      other.electionType == electionType &&
-      other.createAt == createAt &&
-      other.creator == creator &&
-      listEquals(other.votersEmail, votersEmail) &&
-      listEquals(other.listeOptions, listeOptions);
+        other.id == id &&
+        other.title == title &&
+        other.description == description &&
+        other.dateState == dateState &&
+        other.dateEnd == dateEnd &&
+        other.electionType == electionType &&
+        other.createAt == createAt &&
+        other.creator == creator &&
+        listEquals(other.votersEmail, votersEmail) &&
+        listEquals(other.listeOptions, listeOptions);
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      title.hashCode ^
-      description.hashCode ^
-      dateState.hashCode ^
-      dateEnd.hashCode ^
-      electionType.hashCode ^
-      createAt.hashCode ^
-      creator.hashCode ^
-      votersEmail.hashCode ^
-      listeOptions.hashCode;
+        title.hashCode ^
+        description.hashCode ^
+        dateState.hashCode ^
+        dateEnd.hashCode ^
+        electionType.hashCode ^
+        createAt.hashCode ^
+        creator.hashCode ^
+        votersEmail.hashCode ^
+        listeOptions.hashCode;
   }
 }
