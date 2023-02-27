@@ -1,5 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
@@ -9,7 +10,7 @@ import 'package:votify_2/app/core/utils/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timer_controller/timer_controller.dart';
 import 'package:votify_2/app/screem/home_screem/home_screem.dart';
-import 'package:votify_2/app/screem/log_sign_screem/login.dart';
+import 'package:votify_2/app/screem/log_sign_screem/login_template.dart';
 import 'package:votify_2/app/screem/spash_screem/last_splash.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
@@ -46,17 +47,22 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         // }
 
         if (ref.read(mAuthRef).currentUser != null) {
-          ref.read(userAuth.notifier).userId = ref.read(mAuthRef).currentUser!.uid;
-          
-          await ref.read(userController).getMe();
-          navigateToNextPage(context, const MyHomeScreem(), back: false);
+          ref.read(userAuth.notifier).userId =
+              ref.read(mAuthRef).currentUser!.uid;
+
+          await ref.read(userController).getMyInfos();
+          navigateToNextPageWithTransition(context, const MyHomeScreem(),
+              back: false);
         } else {
           bool first = await HelperPreferences.checkKey("FIRST_TIME");
           if (!first) {
             await HelperPreferences.saveStringValue("FIRST_TIME", "1");
-            navigateToNextPage(context, const LastSplashScreem());
+            navigateToNextPageWithTransition(context, const LastSplashScreem(),
+                back: false);
           } else {
-            navigateToNextPage(context, const LoginScreem(), back: false);
+            navigateToNextPageWithTransition(
+                context, const LoginTemplateScreem(),
+                back: false);
           }
         }
         _controller.dispose();

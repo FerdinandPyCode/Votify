@@ -24,87 +24,87 @@ class UserController {
   String url = ConfString.AUTH_URL;
   UserController(this.ref);
 
-  Future<FetchData> loginUser(String email, String password) async {
-    FetchData result = FetchData(data: null, error: "");
+  // Future<FetchData> loginUser(String email, String password) async {
+  //   FetchData result = FetchData(data: null, error: "");
 
-    String myUrl = '${url}jwt/create/';
+  //   String myUrl = '${url}jwt/create/';
 
-    Map<String, String> data = {'email': email, 'password': password};
+  //   Map<String, String> data = {'email': email, 'password': password};
 
-    try {
-      logd('Avant le post de dio');
-      await ref.read(dio).post(myUrl, data: data).then((value) async {
-        if (value.statusCode == 200) {
-          ref.read(userAuth.notifier).token = value.data['refresh'];
-          HelperPreferences.saveStringValue("TOKEN_KEY", value.data['refresh']);
-          ref.refresh(dio);
-          await getMe();
-          result.data = true;
-        } else {
-          result.error = value.data['detail'];
-        }
-        return result;
-      });
-    } catch (e) {
-      logd(e.toString());
-      result.data = false;
-      result.error = e.toString();
-    }
-    return result;
-  }
+  //   try {
+  //     logd('Avant le post de dio');
+  //     await ref.read(dio).post(myUrl, data: data).then((value) async {
+  //       if (value.statusCode == 200) {
+  //         ref.read(userAuth.notifier).token = value.data['refresh'];
+  //         HelperPreferences.saveStringValue("TOKEN_KEY", value.data['refresh']);
+  //         ref.refresh(dio);
+  //         await getMe();
+  //         result.data = true;
+  //       } else {
+  //         result.error = value.data['detail'];
+  //       }
+  //       return result;
+  //     });
+  //   } catch (e) {
+  //     logd(e.toString());
+  //     result.data = false;
+  //     result.error = e.toString();
+  //   }
+  //   return result;
+  // }
 
-  Future<FetchData> createUser(Map<String, String> data) async {
-    FetchData result = FetchData(data: null, error: "");
-    String myUrl = '${url}users/';
+  // Future<FetchData> createUser(Map<String, String> data) async {
+  //   FetchData result = FetchData(data: null, error: "");
+  //   String myUrl = '${url}users/';
 
-    try {
-      logd(data);
-      logd('Avant le post de dio');
-      await ref.read(dio).post(myUrl, data: data).then((value) {
-        logd(value);
-        if (value.statusCode == 201) {
-          UserModel data = UserModel.fromMap(value.data);
-          result.data = data;
-        } else {
-          result.error =
-              "Une erreur s'est produite... (${value.statusMessage})";
-        }
-      });
-    } catch (e) {
-      result.error = e.toString();
-    }
-    return result;
-  }
+  //   try {
+  //     logd(data);
+  //     logd('Avant le post de dio');
+  //     await ref.read(dio).post(myUrl, data: data).then((value) {
+  //       logd(value);
+  //       if (value.statusCode == 201) {
+  //         UserModel data = UserModel.fromMap(value.data);
+  //         result.data = data;
+  //       } else {
+  //         result.error =
+  //             "Une erreur s'est produite... (${value.statusMessage})";
+  //       }
+  //     });
+  //   } catch (e) {
+  //     result.error = e.toString();
+  //   }
+  //   return result;
+  // }
 
-  Future<bool> activeAccount(String email, String code) async {
-    String myUrl = '${url}users/activation/$email/$code/';
+  // Future<bool> activeAccount(String email, String code) async {
+  //   String myUrl = '${url}users/activation/$email/$code/';
 
-    await ref.read(dio).get(myUrl, true).then((value) {
-      logd(value);
-      if (value.statusCode == 200) {
-        if (value.data['message'] == 'Account activted successfully') {
-          return true;
-        }
-      } else {
-        logd(value.data['message']);
-      }
-    });
-    return false;
-  }
+  //   await ref.read(dio).get(myUrl, true).then((value) {
+  //     logd(value);
+  //     if (value.statusCode == 200) {
+  //       if (value.data['message'] == 'Account activted successfully') {
+  //         return true;
+  //       }
+  //     } else {
+  //       logd(value.data['message']);
+  //     }
+  //   });
+  //   return false;
+  // }
 
-  getMe() async {
-    String myUrl = '${url}users/me/';
+  // getMe() async {
+  //   String myUrl = '${url}users/me/';
 
-    await ref.read(dio).get(myUrl, true).then((value) {
-      logd(value);
-      if (value.statusCode == 200) {
-        UserModel userModel = UserModel.fromMap(value.data);
-        ref.read(userAuth.notifier).me = userModel;
-      } else {
-        logd(value.data['detail']);
-      }
-    });
-  }
+  //   await ref.read(dio).get(myUrl, true).then((value) {
+  //     logd(value);
+  //     if (value.statusCode == 200) {
+  //       UserModel userModel = UserModel.fromMap(value.data);
+  //       ref.read(userAuth.notifier).me = userModel;
+  //     } else {
+  //       logd(value.data['detail']);
+  //     }
+  //   });
+  // }
 
   Future<UserModel> getMyInfos() async {
     UserModel userModel =
@@ -115,11 +115,12 @@ class UserController {
 
   Future<void> saveUser(UserModel userModel) async {
     ref.read(userRef).doc(userModel.userId).set(userModel.toMap());
+    await getMyInfos();
   }
 
   Future<void> updateUser(UserModel userModel) async {
     await ref.read(userRef).doc(userModel.userId).update(userModel.toMap());
-    await getMe();
+    await getMyInfos();
   }
 
   Future<UserModel> getUser(
@@ -245,7 +246,7 @@ class UserController {
     return false;
   }
 
-  logOut() async {
+  Future<void> logOut() async {
     await ref.read(mAuthRef).signOut();
   }
 }

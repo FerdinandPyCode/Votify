@@ -10,7 +10,7 @@ import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/ap
 import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/helper_preferences.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
-import 'package:votify_2/app/screem/log_sign_screem/login.dart';
+import 'package:votify_2/app/screem/log_sign_screem/login_template.dart';
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation.dart';
@@ -395,14 +395,19 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
 
   Widget disconnectWidget() {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         HelperPreferences.clear();
-        navigateToNextPage(context, const LoginScreem(), back: false);
+        await ref.read(userController).logOut();
+        navigateToNextPageWithTransition(context, const LoginTemplateScreem(),
+            back: false);
       },
-      child: Icon(
-        Icons.logout,
-        color: AppColors.redColor,
-        size: 25,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(
+          Icons.logout,
+          color: AppColors.redColor,
+          size: 25,
+        ),
       ),
     );
   }
