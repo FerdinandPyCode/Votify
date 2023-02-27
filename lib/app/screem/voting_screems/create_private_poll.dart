@@ -27,7 +27,7 @@ class _CreatePrivatePollState extends State<CreatePrivatePoll> {
   final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _optionController = TextEditingController();
 
-  int optionCount = 3;
+  int optionCount = 2;
   // ignore: deprecated_member_use
   List<TextEditingController> controllers =
       []; //Pour contenir les controllers des champs de textes
@@ -37,7 +37,6 @@ class _CreatePrivatePollState extends State<CreatePrivatePoll> {
   DateTime? endCurentDate = DateTime.now();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     for (int i = 0; i < optionCount; i++) {
       controllers.add(TextEditingController());

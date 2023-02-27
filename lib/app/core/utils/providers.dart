@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/conf.dart';
 import 'package:votify_2/app/core/controller/user_controller.dart';
+import 'package:votify_2/app/core/controller/vote_controller.dart';
 import 'package:votify_2/app/core/services/dio_client.dart';
 
 final dio = Provider(
@@ -18,8 +19,10 @@ final thumbStorageRef =
 
 Provider<CollectionReference> userRef =
     Provider((ref) => getFirestore().collection("Users"));
-Provider<CollectionReference> voteRef = Provider((ref) => getFirestore().collection("Votes"));
-Provider<CollectionReference> voteOptionsRef = Provider((ref) => getFirestore().collection("VoteOptions"));
+Provider<CollectionReference> voteRef =
+    Provider((ref) => getFirestore().collection("Votes"));
+Provider<CollectionReference> voteOptionsRef =
+    Provider((ref) => getFirestore().collection("VoteOptions"));
 // Provider<CollectionReference> catRef = Provider((ref) => getFirestore().collection("Categories"));
 // Provider<CollectionReference> catUsersRef = Provider((ref) => getFirestore().collection("CategoriesUsers"));
 // Provider<CollectionReference> livreRef = Provider((ref) => getFirestore().collection("Livres"));
@@ -31,7 +34,7 @@ Provider<CollectionReference> voteOptionsRef = Provider((ref) => getFirestore().
 
 final userAuth = ChangeNotifierProvider<UserAuth>((ref) => UserAuth());
 final userController = Provider((ref) => UserController(ref));
-// final userController = Provider<UserController>((ref) => UserController(ref));
+final voteController = Provider<VoteController>((ref) => VoteController(ref));
 // final settingController = Provider<SettingsController>((ref) => SettingsController(ref));
 // final mainController = Provider<MainController>((ref) => MainController(ref));
 // final livreController = Provider<LivreController>((ref) => LivreController(ref));
@@ -48,6 +51,5 @@ FirebaseFirestore getFirestore() {
 }
 
 getFirebaseAuth() {
-
   return FirebaseAuth.instance;
 }

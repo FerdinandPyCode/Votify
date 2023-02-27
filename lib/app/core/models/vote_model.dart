@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-
 import 'package:votify_2/app/core/models/options_model.dart';
 
 class Vote {
@@ -15,6 +13,7 @@ class Vote {
   String creator = '';
   List<String> votersEmail = [];
   List<Option> listeOptions = [];
+  
   Vote({
     required this.id,
     required this.title,
