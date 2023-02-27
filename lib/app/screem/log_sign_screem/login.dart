@@ -127,28 +127,24 @@ class _LoginScreemState extends ConsumerState<LoginScreem> {
 
                               await ref
                                   .read(userController)
-                                  .loginUser(textEditingControllerEmail.text,
+                                  .signIn(textEditingControllerEmail.text,
                                       textEditingControllerPassword.text)
                                   .then((value) {
-                                if (value.data) {
+                                if (value) {
                                   showFlushBar(context, "Connection",
                                       "Vous êtes connectés avec succès !!!");
                                   navigateToNextPage(
                                       context, const MyHomeScreem(),
                                       back: false);
                                 } else {
-                                  showFlushBar(
-                                      context,
-                                      "Erreur de Connection",
-                                      value.error ??
-                                          "Oops ! Une erreur est survenue");
+                                  showFlushBar(context, "Erreur de Connection",
+                                      "Information de connection incorrecte !");
                                 }
                               });
 
                               setState(() {
                                 signInLoading = false;
                               });
-                              
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

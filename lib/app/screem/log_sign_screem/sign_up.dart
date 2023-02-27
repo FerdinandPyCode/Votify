@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
-import 'package:votify_2/app/screem/log_sign_screem/activation_compte.dart';
+import 'package:votify_2/app/screem/home_screem/home_screem.dart';
 import '../../core/constants/asset_data.dart';
 import '../../core/constants/color.dart';
 import '../../core/constants/strings.dart';
@@ -121,33 +121,35 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
                                 signInLoading = true;
                               });
 
-                              Map<String, String> map = {
-                                "username": textEditingControllerUserName.text,
-                                "first_name": 'None',
-                                "last_name": 'None',
-                                "address": "None",
-                                "phone": "None",
-                                "email": textEditingControllerEmail.text,
-                                "password": textEditingControllerPassword.text,
-                                "re_password":
-                                    textEditingControllerPassword.text
-                              };
+                              // Map<String, String> map = {
+                              //   "username": textEditingControllerUserName.text,
+                              //   "first_name": 'None',
+                              //   "last_name": 'None',
+                              //   "address": "None",
+                              //   "phone": "None",
+                              //   "email": textEditingControllerEmail.text,
+                              //   "password": textEditingControllerPassword.text,
+                              //   "re_password":
+                              //       textEditingControllerPassword.text
+                              // };
 
                               await ref
                                   .read(userController)
-                                  .createUser(map)
+                                  .createUserFirebase(
+                                      textEditingControllerEmail.text,
+                                      textEditingControllerPassword.text,
+                                      textEditingControllerUserName.text)
                                   .then(
                                 (value) {
-                                  if (value.data != null) {
+                                  if (value) {
                                     showFlushBar(context, "Création de compte",
                                         "Votre compte est créé avec succès !");
                                     navigateToNextPage(
-                                        context,
-                                        ConfirmationCodePage(
-                                            userModel: value.data));
+                                        context, const MyHomeScreem(),
+                                        back: false);
                                   } else {
                                     showFlushBar(context, "Création de compte",
-                                        "La création du compte à échouer");
+                                        "La création du compte à échouer , mail déjà utilisé ou mot de passe trop court.");
                                   }
                                 },
                               );

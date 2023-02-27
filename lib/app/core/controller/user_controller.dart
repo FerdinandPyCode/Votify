@@ -233,7 +233,7 @@ class UserController {
             userId: ref.read(mAuthRef).currentUser!.uid);
         //Save the user
         await saveUser(userModel);
-        
+
         return true;
       }
     } catch (e, ee) {
