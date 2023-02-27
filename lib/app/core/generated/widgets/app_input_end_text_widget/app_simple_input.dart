@@ -1,6 +1,5 @@
 
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 
