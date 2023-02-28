@@ -546,7 +546,7 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
   }
 
   Future<List<String>> treatFile() async {
-    /// Use FilePicker to pick files in Flutter Web
+    // Use FilePicker to pick files in Flutter Web
 
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -554,7 +554,7 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
       allowMultiple: false,
     );
 
-    /// file might be picked
+    // file might be picked
 
     if (pickedFile != null) {
       var bytes = pickedFile.files.single.bytes;
