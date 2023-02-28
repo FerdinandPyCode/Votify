@@ -486,7 +486,12 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                                       'toto@gmail.com',
                                       'tata@gmail.com',
                                       'mimi@gmail.com',
-                                      'baba@gmail.com'
+                                      'baba@gmail.com',
+                                      'allowakouferdinand@gmail.com',
+                                      'sodokinmarius@gmail.com',
+                                      'oseesoke@gmail.com',
+                                      'test.tensorunit@gmail.com',
+                                      'hernandezdecos96@gmail.com',
                                     ];
                                   }
 
@@ -576,4 +581,22 @@ What do you think ?
 chatGPT
 LLaMa
 Bard
+
+-------------------------------------------------------------
+
+Responsable IFRI
+
+Élection des responsables d'ifri pour l'année 2022-2023
+Toto
+Patou
+Gregory
+Donan
+
+-------------------------------------------------------------
+
+Langage de programmation mobile le plus utilisé en 2023
+
+Juste un petit sondage pour étudier la popularité des langages de dev mobile
+
+
 */
