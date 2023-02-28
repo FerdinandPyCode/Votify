@@ -1,3 +1,5 @@
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -400,7 +402,9 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                                 ])),
                                 //  uUpload file
                                 InkWell(
-                                  onTap: (() {}),
+                                  onTap: (() {
+                                    treatFile();
+                                  }),
                                   child: Card(
                                     shadowColor: AppColors.greyColor,
                                     elevation: 3.0,
@@ -487,9 +491,9 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                                   }
 
                                   logd(vote);
-                                  
-                                  await ref.read(voteController).addVote(vote);
 
+                                  await ref.read(voteController).addVote(vote);
+                                  initializeAll();
                                   setState(() {
                                     isLoading = false;
                                   });
@@ -511,6 +515,18 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
     );
   }
 
+  initializeAll() {
+    _titleController.clear();
+    _descriptionController.clear();
+    for (int i = 0; i < optionCount; i++) {
+      controllers[i].clear();
+    }
+
+    optionCount = 2;
+    startCurentDate = DateTime.now();
+    endCurentDate = DateTime.now();
+  }
+
   Future<void> _pickStartDate() async {
     startCurentDate = await PollsWidgets.selectDate(context);
 
@@ -522,6 +538,33 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
     endCurentDate = await PollsWidgets.selectDate(context);
     setState(() {});
     logd(startCurentDate.toString().substring(0, 19));
+  }
+
+  Future<List<String>> treatFile() async {
+    /// Use FilePicker to pick files in Flutter Web
+
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx'],
+      allowMultiple: false,
+    );
+
+    /// file might be picked
+
+    if (pickedFile != null) {
+      var bytes = pickedFile.files.single.bytes;
+      var excel = Excel.decodeBytes(bytes!);
+      for (var table in excel.tables.keys) {
+        logd(table); //sheet Name
+        logd(excel.tables[table]!.maxCols);
+        logd(excel.tables[table]!.maxRows);
+        for (var row in excel.tables[table]!.rows) {
+          logd("$row");
+        }
+      }
+    }
+
+    return [];
   }
 }
 

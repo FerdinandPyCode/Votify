@@ -63,6 +63,7 @@ dependencies:
   firebase_storage:
   google_sign_in:
   flutter_local_notifications:
+  excel: ^2.0.1
 
 dev_dependencies:
   flutter_test:
