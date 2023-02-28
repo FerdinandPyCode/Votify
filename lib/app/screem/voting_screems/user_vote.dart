@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/models/vote_model.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation.dart';
 import '../../core/generated/widgets/dial_button.dart';
 
-class UserVoteTemplate extends StatefulWidget {
-  final bool isAdmin;
-  const UserVoteTemplate({super.key, this.isAdmin = true});
+class UserVoteTemplate extends ConsumerStatefulWidget {
+  final Vote vote;
+  const UserVoteTemplate(this.vote, {super.key});
 
   @override
-  State<UserVoteTemplate> createState() => _UserVoteTemplateState();
+  ConsumerState<UserVoteTemplate> createState() => _UserVoteTemplateState();
 }
 
-class _UserVoteTemplateState extends State<UserVoteTemplate> {
-  int nbrVoters = 4;
+class _UserVoteTemplateState extends ConsumerState<UserVoteTemplate> {
   late int selectedRadioTile;
   @override
   void initState() {
@@ -67,7 +69,7 @@ class _UserVoteTemplateState extends State<UserVoteTemplate> {
                     width: 10.0,
                   ),
                   AppText(
-                    '70 ${StringData.alreadyVpters}',
+                    '${widget.vote.listeVote.length} ${StringData.alreadyVpters}',
                     color: AppColors.blackColor,
                     size: 15.0,
                     weight: FontWeight.bold,
@@ -79,7 +81,7 @@ class _UserVoteTemplateState extends State<UserVoteTemplate> {
                 height: 16.0,
               ),
               AppText(
-                StringData.pollTitle,
+                widget.vote.title,
                 color: AppColors.blackColor,
                 weight: FontWeight.bold,
               ),
@@ -91,7 +93,7 @@ class _UserVoteTemplateState extends State<UserVoteTemplate> {
               ListView.builder(
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: nbrVoters,
+                  itemCount: widget.vote.listeOptions.length,
                   itemBuilder: (context, int index) {
                     return RadioListTile(
                       contentPadding: const EdgeInsets.all(0.0),
@@ -111,7 +113,7 @@ class _UserVoteTemplateState extends State<UserVoteTemplate> {
                         height: 40.0,
                         child: Center(
                           child: AppText(
-                            StringData.pollTitle,
+                            widget.vote.listeOptions[index].fullName,
                             color: AppColors.greyBlackColor,
                             size: 13.0,
                           ),
@@ -129,7 +131,7 @@ class _UserVoteTemplateState extends State<UserVoteTemplate> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   //delete button
-                  widget.isAdmin
+                  widget.vote.creator == ref.read(userAuth).userId
                       ? DynamiqueButton(
                           childs: Center(
                               child: AppText(

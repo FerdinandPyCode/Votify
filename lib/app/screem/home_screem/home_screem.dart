@@ -4,6 +4,7 @@ import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/models/vote_model.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
 import 'package:votify_2/app/screem/voting_screems/user_vote.dart';
 import 'package:votify_2/app/screem/voting_screems/voting_progress.dart';
@@ -28,8 +29,8 @@ class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    // double width = MediaQuery.of(context).size.width;
+    // double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: MyAppBar(
@@ -73,100 +74,137 @@ class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
               const SizedBox(
                 height: 24.0,
               ),
-              //Public Polls
-              typePolls(action: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const VoteProgresScreem()));
-              }),
-              const SizedBox(
-                height: 16.0,
-              ),
-              //Private Polls
-              typePolls(
-                  publicPolls: false,
-                  action: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const VoteProgresScreem()));
-                  }),
-              const SizedBox(
-                height: 16.0,
-              ),
-              Center(
-                child: Image.asset(AssetData.greatMicro),
-              ),
 
-              const SizedBox(
-                height: 16.0,
-              ),
-              AppText(
-                StringData.recentPoll,
-                color: AppColors.blackColor,
-                weight: FontWeight.bold,
-                size: 13.0,
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              //Recent Polls
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, int index) {
-                    return PollsWidgets.pollFirstTemplate(
-                        title: StringData.pollTitle,
-                        subTitle: StringData.pollSousTitle,
-                        trailing: '75',
-                        action: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UserVoteTemplate(
-                                      isAdmin: (index % 2 == 0))));
-                        });
-                  }),
+              StreamBuilder(
+                stream: ref.watch(voteController).getAllVote(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: AppText("Erreur de chargement"),
+                    );
+                  } else if (snapshot.hasData) {
+                    Map<String, List<Vote>> votes =
+                        snapshot.data ?? {"PRIVATE": [], "PUBLIC": []};
+                    List<Vote> publicVotes = votes["PUBLIC"]!;
+                    List<Vote> privateVotes = votes["PRIVATE"]!;
+                    List<Vote> liste = privateVotes + publicVotes;
+                    liste.shuffle();
 
-              const SizedBox(
-                height: 12.0,
-              ),
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Public Polls
+                        typePolls(
+                            nbrPolls: publicVotes.length,
+                            action: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          VoteProgresScreem(publicVotes)));
+                            }),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        //Private Polls
+                        typePolls(
+                            nbrPolls: privateVotes.length,
+                            publicPolls: false,
+                            action: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          VoteProgresScreem(privateVotes)));
+                            }),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        Center(
+                          child: Image.asset(AssetData.greatMicro),
+                        ),
 
-              //Button go to list of list polls
-              Align(
-                alignment: Alignment.centerRight,
-                child: DynamiqueButton(
-                  action: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const VotingListScreem()));
-                  },
-                  bgColor: AppColors.blueBgColor,
-                  childs: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      AppText(
-                        StringData.viewList,
-                        color: AppColors.backgroundColor,
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: AppColors.backgroundColor,
-                      )
-                    ],
-                  ),
-                  height: 50.0,
-                  radius: 10.0,
-                  width: 150.0,
-                ),
-              ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        AppText(
+                          StringData.recentPoll,
+                          color: AppColors.blackColor,
+                          weight: FontWeight.bold,
+                          size: 13.0,
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        //Recent Polls
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: liste.length > 4 ? 4 : liste.length,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, int index) {
+                              return PollsWidgets.pollFirstTemplate(
+                                  title: liste[index].title,
+                                  subTitle:
+                                      liste[index].listeOptions[0].fullName,
+                                  trailing: '75',
+                                  action: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserVoteTemplate(
+                                                    liste[index])));
+                                  });
+                            }),
 
-              const SizedBox(
-                height: 50.0,
+                        const SizedBox(
+                          height: 12.0,
+                        ),
+
+                        //Button go to list of list polls
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: DynamiqueButton(
+                            action: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          VotingListScreem(liste)));
+                            },
+                            bgColor: AppColors.blueBgColor,
+                            childs: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                AppText(
+                                  StringData.viewList,
+                                  color: AppColors.backgroundColor,
+                                ),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: AppColors.backgroundColor,
+                                )
+                              ],
+                            ),
+                            height: 50.0,
+                            radius: 10.0,
+                            width: 150.0,
+                          ),
+                        ),
+
+                        const SizedBox(
+                          height: 50.0,
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
               ),
             ],
           ),
@@ -176,7 +214,7 @@ class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
   }
 
   Widget typePolls(
-      {double nbrPolls = 12,
+      {int nbrPolls = 12,
       bool publicPolls = true,
       required VoidCallback action}) {
     return InkWell(
@@ -198,11 +236,17 @@ class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
             ]),
         child: ListTile(
           //contentPadding: EdgeInsets.all(0.0),
-          leading: publicPolls
-              ? Image.asset(AssetData.privateIcon)
-              : Image.asset(AssetData.publicIcon),
+          leading: !publicPolls
+              ? Image.asset(
+                  AssetData.privateIcon,
+                  color: AppColors.blackColor,
+                )
+              : Image.asset(
+                  AssetData.publicIcon,
+                  color: AppColors.backgroundColor,
+                ),
           title: AppText(
-            '${nbrPolls.toInt()} ${StringData.privatePollActive}',
+            '${nbrPolls.toInt()} ${publicPolls ? StringData.publicPollActive : StringData.privatePollActive}',
             color:
                 publicPolls ? AppColors.backgroundColor : AppColors.blackColor,
             weight: FontWeight.bold,
@@ -211,7 +255,7 @@ class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
           subtitle: AppText(
             StringData.showDetail,
             color: AppColors.greyBlackColor,
-            size: 12.0,
+            size: 14.0,
           ),
           trailing: Icon(
             Icons.chevron_right,

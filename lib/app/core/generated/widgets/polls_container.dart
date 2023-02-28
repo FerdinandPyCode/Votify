@@ -112,7 +112,7 @@ class PollsWidgets {
                         width: 10.0,
                       ),
                       AppText(
-                        '$nbrVotes ${StringData.options}',
+                        '$nbrOptions ${StringData.options}',
                         color: AppColors.greyBlackColor,
                       )
                     ],

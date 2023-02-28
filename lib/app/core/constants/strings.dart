@@ -42,7 +42,7 @@ class StringData {
   static String val = "results ...";
   static String alreadyVpters = "already voters";
   static String optionTitle = "Asus ROG Phone 55";
-  static String vote = "Votes";
+  static String vote = "Vote";
   static String creerVote = "Créer";
   static String delete = "delete";
   static String history = "History";
