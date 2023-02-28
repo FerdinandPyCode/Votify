@@ -43,6 +43,7 @@ class StringData {
   static String alreadyVpters = "already voters";
   static String optionTitle = "Asus ROG Phone 55";
   static String vote = "Votes";
+  static String creerVote = "Créer";
   static String delete = "delete";
   static String history = "History";
   static String public = "Public";
@@ -70,7 +71,7 @@ class StringData {
   static String notification = "Notifications";
   static String notificationE =
       "The poll “Which AI chat is better ?” is finished kbkh jllbj jgbl bohbn o uh oh h oigi iy";
-  //static String val="";
+  static String remplirChamps = "Veuillez remplir ce champ";
   //static String val="";
   //static String val="";
   //static String val="";

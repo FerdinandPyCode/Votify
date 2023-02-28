@@ -124,12 +124,11 @@ class PollsWidgets {
     );
   }
 
-  static Future<DateTime?> selectDate(
-      BuildContext context, DateTime currentDate) async {
+  static Future<DateTime?> selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
         context: context,
-        initialDate: currentDate,
-        firstDate: DateTime(2015),
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
         lastDate: DateTime(2050));
     return pickedDate;
   }
