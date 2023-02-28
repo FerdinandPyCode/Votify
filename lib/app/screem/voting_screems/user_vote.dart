@@ -1,11 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
+import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
+import 'package:votify_2/app/screem/home_screem/home_screem.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
@@ -22,6 +28,8 @@ class UserVoteTemplate extends ConsumerStatefulWidget {
 
 class _UserVoteTemplateState extends ConsumerState<UserVoteTemplate> {
   late int selectedRadioTile;
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -151,11 +159,16 @@ class _UserVoteTemplateState extends ConsumerState<UserVoteTemplate> {
                       childs: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          AppText(
-                            StringData.vote,
-                            color: AppColors.backgroundColor,
-                            size: 12.0,
-                          ),
+                          isLoading
+                              ? CupertinoActivityIndicator(
+                                  radius: 10,
+                                  color: AppColors.backgroundColor,
+                                )
+                              : AppText(
+                                  StringData.vote,
+                                  color: AppColors.backgroundColor,
+                                  size: 12.0,
+                                ),
                           const SizedBox(
                             width: 5.0,
                           ),
@@ -167,7 +180,23 @@ class _UserVoteTemplateState extends ConsumerState<UserVoteTemplate> {
                       ),
                       width: 100,
                       height: 40,
-                      action: () {},
+                      action: () async {
+                        logd(selectedRadioTile);
+                        logd(widget.vote.id);
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await ref.read(voteController).voteNow(
+                            widget.vote.id, "OPT${selectedRadioTile + 1}");
+
+                        setState(() {
+                          isLoading = false;
+                        });
+                        Fluttertoast.showToast(
+                            msg: "Vote éffectué avec succès !");
+                        navigateToNextPage(context, const MyHomeScreem(),
+                            back: false);
+                      },
                       bgColor: AppColors.blueBgColor,
                       radius: 10)
                 ],
