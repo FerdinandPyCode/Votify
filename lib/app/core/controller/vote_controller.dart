@@ -6,7 +6,7 @@ class VoteController {
   Ref ref;
   VoteController(this.ref);
 
-  Future addVote(Vote vote) async {
+  Future<void> addVote(Vote vote) async {
     await ref.read(voteRef).add(vote.toMap());
   }
 

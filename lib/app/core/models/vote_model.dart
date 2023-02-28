@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:votify_2/app/core/models/options_model.dart';
+import 'package:votify_2/app/core/models/user_vote_model.dart';
 
 class Vote {
   String id = '';
@@ -13,7 +14,7 @@ class Vote {
   String creator = '';
   List<String> votersEmail = [];
   List<Option> listeOptions = [];
-
+  List<UserVote> listeVote = [];
   Vote({
     required this.id,
     required this.title,
@@ -25,6 +26,7 @@ class Vote {
     required this.creator,
     required this.votersEmail,
     required this.listeOptions,
+    required this.listeVote,
   });
 
   factory Vote.initial() => Vote(
@@ -37,7 +39,8 @@ class Vote {
       createAt: "",
       creator: "",
       votersEmail: [],
-      listeOptions: []);
+      listeOptions: [],
+      listeVote: []);
 
   Vote copyWith({
     String? id,
@@ -50,6 +53,7 @@ class Vote {
     String? creator,
     List<String>? votersEmail,
     List<Option>? listeOptions,
+    List<UserVote>? listeVote,
   }) {
     return Vote(
       id: id ?? this.id,
@@ -62,6 +66,7 @@ class Vote {
       creator: creator ?? this.creator,
       votersEmail: votersEmail ?? this.votersEmail,
       listeOptions: listeOptions ?? this.listeOptions,
+      listeVote: listeVote ?? this.listeVote,
     );
   }
 
@@ -79,6 +84,7 @@ class Vote {
     result.addAll({'votersEmail': votersEmail});
     result
         .addAll({'listeOptions': listeOptions.map((x) => x.toMap()).toList()});
+    result.addAll({'listeVote': listeVote.map((x) => x.toMap()).toList()});
 
     return result;
   }
@@ -96,6 +102,8 @@ class Vote {
       votersEmail: List<String>.from(map['votersEmail']),
       listeOptions:
           List<Option>.from(map['listeOptions']?.map((x) => Option.fromMap(x))),
+      listeVote: List<UserVote>.from(
+          map['listeVote']?.map((x) => UserVote.fromMap(x))),
     );
   }
 
@@ -105,7 +113,7 @@ class Vote {
 
   @override
   String toString() {
-    return 'Vote(id: $id, title: $title, description: $description, dateState: $dateState, dateEnd: $dateEnd, electionType: $electionType, createAt: $createAt, creator: $creator, votersEmail: $votersEmail, listeOptions: $listeOptions)';
+    return 'Vote(id: $id, title: $title, description: $description, dateState: $dateState, dateEnd: $dateEnd, electionType: $electionType, createAt: $createAt, creator: $creator, votersEmail: $votersEmail, listeOptions: $listeOptions, listeVote: $listeVote)';
   }
 
   @override
@@ -122,7 +130,8 @@ class Vote {
         other.createAt == createAt &&
         other.creator == creator &&
         listEquals(other.votersEmail, votersEmail) &&
-        listEquals(other.listeOptions, listeOptions);
+        listEquals(other.listeOptions, listeOptions) &&
+        listEquals(other.listeVote, listeVote);
   }
 
   @override
@@ -136,6 +145,7 @@ class Vote {
         createAt.hashCode ^
         creator.hashCode ^
         votersEmail.hashCode ^
-        listeOptions.hashCode;
+        listeOptions.hashCode ^
+        listeVote.hashCode;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
@@ -26,19 +27,17 @@ class CreatePrivatePoll extends ConsumerStatefulWidget {
 class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
-  final TextEditingController _optionController = TextEditingController();
 
   int optionCount = 2;
   // ignore: deprecated_member_use
-  List<TextEditingController> controllers =
-      []; //Pour contenir les controllers des champs de textes
+  List<TextEditingController> controllers = [];
+  //Pour contenir les controllers des champs de textes
   List<String> options = [];
 
   DateTime? startCurentDate = DateTime.now();
   DateTime? endCurentDate = DateTime.now();
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -46,6 +45,16 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
     for (int i = 0; i < optionCount; i++) {
       controllers.add(TextEditingController());
     }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    for (int i = 0; i < optionCount; i++) {
+      controllers[i].dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -413,11 +422,16 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                               childs: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  AppText(
-                                    StringData.creerVote,
-                                    color: AppColors.backgroundColor,
-                                    size: 12.0,
-                                  ),
+                                  isLoading
+                                      ? CupertinoActivityIndicator(
+                                          radius: 10,
+                                          color: AppColors.backgroundColor,
+                                        )
+                                      : AppText(
+                                          StringData.creerVote,
+                                          color: AppColors.backgroundColor,
+                                          size: 12.0,
+                                        ),
                                   const SizedBox(
                                     width: 5.0,
                                   ),
@@ -429,9 +443,11 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                               ),
                               width: 100,
                               height: 40,
-                              action: () {
+                              action: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  logd("Good");
+                                  setState(() {
+                                    isLoading = true;
+                                  });
                                   Vote vote = Vote.initial();
 
                                   vote.title = _titleController.text;
@@ -469,8 +485,16 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                                       'baba@gmail.com'
                                     ];
                                   }
+
                                   logd(vote);
+                                  
+                                  await ref.read(voteController).addVote(vote);
+
+                                  setState(() {
+                                    isLoading = false;
+                                  });
                                 }
+
                                 logd("Daad");
                               },
                               bgColor: AppColors.blueBgColor,
