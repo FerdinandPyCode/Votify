@@ -193,7 +193,7 @@ class _UserVoteTemplateState extends ConsumerState<UserVoteTemplate> {
                           isLoading = false;
                         });
                         Fluttertoast.showToast(
-                            msg: "Vote éffectué avec succès !");
+                            msg: "Vote vote a été éffectué avec succès !");
                         navigateToNextPage(context, const MyHomeScreem(),
                             back: false);
                       },

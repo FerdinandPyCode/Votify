@@ -74,9 +74,34 @@ class VoteController {
     });
   }
 
-  /*
-  String userId = '';
-  String optionchoisi = '';
-  String votedAt = '';
-  */
+  Stream<Map<String, List<Vote>>> getOldVote() {
+    return ref.read(voteRef).snapshots().map((event) {
+      List<Vote> es = event.docs
+          .map((e) =>
+              Vote.fromMap(e.data() as Map<String, dynamic>).copyWith(id: e.id))
+          .toList();
+
+      Map<String, List<Vote>> votes = {"PRIVATE": [], "PUBLIC": []};
+      for (Vote v in es) {
+        bool can = true;
+
+        for (UserVote uV in v.listeVote) {
+          if (uV.userId == ref.read(userAuth).userId) {
+            can = false;
+            break;
+          }
+        }
+        if (!can) {
+          if (v.electionType == "PUBLIC") {
+            votes['PUBLIC']!.add(v);
+          } else {
+            if (v.votersEmail.contains(ref.read(userAuth).me.email)) {
+              votes['PRIVATE']!.add(v);
+            }
+          }
+        }
+      }
+      return votes;
+    });
+  }
 }

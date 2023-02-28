@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
-import 'package:votify_2/app/screem/voting_screems/final_vote.dart';
+import 'package:votify_2/app/screem/voting_screems/user_vote.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/constants/strings.dart';
@@ -86,7 +86,7 @@ class _VotingListScreemState extends State<VotingListScreem> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const FinalVoteTemplate()));
+                                        UserVoteTemplate(widget.liste[index])));
                           });
                     })
               ],

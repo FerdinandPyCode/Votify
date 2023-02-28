@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:votify_2/app/core/models/vote_model.dart';
 import 'package:votify_2/app/screem/voting_screems/final_vote.dart';
 
 import '../../core/constants/color.dart';
@@ -235,7 +236,7 @@ class _MyHistorieScreemState extends ConsumerState<MyHistorieScreem> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const FinalVoteTemplate()));
+                                        FinalVoteTemplate(Vote.initial())));
                           });
                     }),
               )

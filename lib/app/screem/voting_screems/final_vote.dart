@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/models/vote_model.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
@@ -9,7 +10,8 @@ import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation
 import '../../core/generated/widgets/dial_button.dart';
 
 class FinalVoteTemplate extends StatefulWidget {
-  const FinalVoteTemplate({super.key});
+  final Vote vote;
+  const FinalVoteTemplate(this.vote, {super.key});
 
   @override
   State<FinalVoteTemplate> createState() => _FinalVoteTemplateState();
@@ -22,9 +24,11 @@ class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
     {'title': StringData.pollTitle, 'pourcentage': '20%', 'isBest': false},
     {'title': StringData.pollTitle, 'pourcentage': '5%', 'isBest': false},
   ];
-  int nbrVoters = 4;
+  int nbrVoters = 0;
+
   @override
   void initState() {
+    nbrVoters = widget.vote.listeVote.length;
     super.initState();
   }
 
@@ -63,7 +67,7 @@ class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
                     width: 10.0,
                   ),
                   AppText(
-                    '70 ${StringData.voters}',
+                    '${widget.vote.listeVote.length} ${StringData.voters}',
                     color: AppColors.blackColor,
                     size: 13.0,
                     weight: FontWeight.bold,
@@ -74,7 +78,7 @@ class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
                 height: 16.0,
               ),
               AppText(
-                StringData.pollTitle,
+                widget.vote.title,
                 color: AppColors.blackColor,
                 weight: FontWeight.bold,
               ),
@@ -86,7 +90,7 @@ class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
               ListView.builder(
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: optionList.length,
+                  itemCount: widget.vote.listeOptions.length,
                   itemBuilder: (context, index) {
                     return Container(
                       margin: const EdgeInsets.symmetric(vertical: 5.0),
@@ -102,7 +106,7 @@ class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AppText(
-                            optionList[index]['title'],
+                            widget.vote.listeOptions[index].fullName,
                             color: AppColors.greyBlackColor,
                             size: 13.0,
                           ),
@@ -110,17 +114,18 @@ class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              (optionList[index]['isBest'] == true)
-                                  ? Image.asset(
-                                      AssetData.valide,
-                                      color: AppColors.blueBgColor,
-                                    )
-                                  : const AppText(''),
+                              //(optionList[index]['isBest'] == true)
+                              //?
+                              Image.asset(
+                                AssetData.valide,
+                                color: AppColors.blueBgColor,
+                              ),
+                              //: const AppText(''),
                               const SizedBox(
                                 width: 5.0,
                               ),
                               AppText(
-                                optionList[index]['pourcentage'],
+                                "50",
                                 weight: FontWeight.bold,
                                 color: AppColors.blueBgColor,
                                 size: 20.0,
