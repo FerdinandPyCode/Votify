@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:votify_2/app/core/models/user_vote_model.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
 
@@ -19,11 +21,21 @@ class VoteController {
 
       Map<String, List<Vote>> votes = {"PRIVATE": [], "PUBLIC": []};
       for (Vote v in es) {
-        if (v.electionType == "PUBLIC") {
-          votes['PUBLIC']!.add(v);
-        } else {
-          if (v.votersEmail.contains(ref.read(userAuth).me.email)) {
-            votes['PRIVATE']!.add(v);
+        bool can = true;
+
+        for (UserVote uV in v.listeVote) {
+          if (uV.userId == ref.read(userAuth).userId) {
+            can = false;
+            break;
+          }
+        }
+        if (can) {
+          if (v.electionType == "PUBLIC") {
+            votes['PUBLIC']!.add(v);
+          } else {
+            if (v.votersEmail.contains(ref.read(userAuth).me.email)) {
+              votes['PRIVATE']!.add(v);
+            }
           }
         }
       }
@@ -49,4 +61,22 @@ class VoteController {
     });
     return en;
   }
+
+  Future<void> voteNow(String voteId, String option) async {
+    await ref.read(voteRef).doc(voteId).update({
+      "listeVote": FieldValue.arrayUnion([
+        {
+          'userId': ref.read(userAuth).userId,
+          'optionchoisi': option,
+          'votedAt': DateTime.now().toString().substring(0, 19)
+        }
+      ])
+    });
+  }
+
+  /*
+  String userId = '';
+  String optionchoisi = '';
+  String votedAt = '';
+  */
 }
