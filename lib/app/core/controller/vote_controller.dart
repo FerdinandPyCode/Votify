@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/models/user_vote_model.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
@@ -54,12 +55,15 @@ class VoteController {
     return es;
   }
 
-  Future<Vote> getVote(String id) async {
-    Vote en = Vote.initial();
-    await ref.read(voteRef).doc(id).get().then((e) {
-      en = Vote.fromMap(e.data() as Map<String, dynamic>).copyWith(id: e.id);
-    });
-    return en;
+  Future<List<UserModel>> getVoteUser(List<UserVote> lUV) async {
+    List<UserModel> liste = [];
+    for (UserVote uV in lUV) {
+      await ref.read(userController).getUser(uV.userId).then((value) {
+        liste.add(value);
+      });
+    }
+
+    return liste;
   }
 
   Future<void> voteNow(String voteId, String option) async {

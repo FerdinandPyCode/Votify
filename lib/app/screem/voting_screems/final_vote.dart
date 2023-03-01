@@ -137,8 +137,7 @@ class _FinalVoteTemplateState extends ConsumerState<FinalVoteTemplate> {
                               const SizedBox(
                                 width: 5.0,
                               ),
-                              // widget.vote.electionType == "PUBLIC"
-                              //     ?
+
                               (DateTime.parse(widget.vote.dateEnd)
                                               .millisecondsSinceEpoch >
                                           DateTime.now()
