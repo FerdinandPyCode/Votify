@@ -4,6 +4,7 @@ import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
 import 'package:votify_2/app/core/models/options_model.dart';
+import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/models/user_vote_model.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
@@ -177,73 +178,103 @@ class _FinalVoteTemplateState extends ConsumerState<FinalVoteTemplate> {
               ),
 
               //Voters List
-
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: nbrVoters,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: double.infinity,
-                      height: 50.0,
-                      margin: const EdgeInsets.symmetric(vertical: 5.0),
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      decoration: BoxDecoration(
-                          color: AppColors.backgroundColor,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 5.0,
-                                spreadRadius: 0.0,
-                                color: AppColors.blueBgColor,
-                                offset: const Offset(0, 1))
-                          ]),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: AppColors.greySkyColor,
-                            backgroundImage: AssetImage(AssetData.google),
+              widget.vote.creator == ref.read(userAuth).userId
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FutureBuilder(
+                            future: ref
+                                .read(voteController)
+                                .getVoteUser(widget.vote.listeVote),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                List<UserModel> liste = snapshot.data ?? [];
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: liste.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: double.infinity,
+                                        height: 50.0,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 5.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        decoration: BoxDecoration(
+                                            color: AppColors.backgroundColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 5.0,
+                                                  spreadRadius: 0.0,
+                                                  color: AppColors.blueBgColor,
+                                                  offset: const Offset(0, 1))
+                                            ]),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor:
+                                                  AppColors.greySkyColor,
+                                              backgroundImage:
+                                                  AssetImage(AssetData.google),
+                                            ),
+                                            const SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            AppText(
+                                              liste[index].username,
+                                              color: AppColors.greyBlackColor,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              } else if (snapshot.hasError) {
+                                return const AppText(
+                                    "Une erreur lors de la récupération de la liste des votants");
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            }),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                            child: TextButton(
+                                // onPressed: () {
+                                //   setState(() {
+                                //     nbrVoters = nbrVoters * 2;
+                                //   });
+                                // },
+                                onPressed: null,
+                                child: Row(
+                                  children: [
+                                    AppText(
+                                      StringData.showMore,
+                                      color: AppColors.blueBgColor,
+                                      size: 12.0,
+                                      weight: FontWeight.bold,
+                                    ),
+                                    Icon(
+                                      Icons.expand_more,
+                                      color: AppColors.blueBgColor,
+                                    )
+                                  ],
+                                )),
                           ),
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                          AppText(
-                            StringData.pollTitle,
-                            color: AppColors.greyBlackColor,
-                          )
-                        ],
-                      ),
-                    );
-                  }),
-
-              const SizedBox(
-                height: 15.0,
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          nbrVoters = nbrVoters * 2;
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          AppText(
-                            StringData.showMore,
-                            color: AppColors.blueBgColor,
-                            size: 12.0,
-                            weight: FontWeight.bold,
-                          ),
-                          Icon(
-                            Icons.expand_more,
-                            color: AppColors.blueBgColor,
-                          )
-                        ],
-                      )),
-                ),
-              )
+                        )
+                      ],
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: AppText(
+                          "Veuillez contacter le créateur du vote pour avoir plus de détail"),
+                    ),
             ],
           ),
         ),
