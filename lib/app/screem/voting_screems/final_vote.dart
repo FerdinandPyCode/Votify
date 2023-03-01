@@ -18,12 +18,6 @@ class FinalVoteTemplate extends StatefulWidget {
 }
 
 class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
-  List optionList = [
-    {'title': StringData.pollTitle, 'pourcentage': '25%', 'isBest': false},
-    {'title': StringData.pollTitle, 'pourcentage': '50%', 'isBest': true},
-    {'title': StringData.pollTitle, 'pourcentage': '20%', 'isBest': false},
-    {'title': StringData.pollTitle, 'pourcentage': '5%', 'isBest': false},
-  ];
   int nbrVoters = 0;
 
   @override

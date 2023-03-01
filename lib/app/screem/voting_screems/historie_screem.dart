@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
 import 'package:votify_2/app/screem/voting_screems/final_vote.dart';
 
 import '../../core/constants/color.dart';
@@ -77,171 +78,235 @@ class _MyHistorieScreemState extends ConsumerState<MyHistorieScreem> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
           width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: AppText(
-                  StringData.history,
-                  color: AppColors.blueBgColor,
-                  weight: FontWeight.bold,
-                  size: 20.0,
-                ),
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              // Overview for last 7 days
-              AppText(
-                StringData.overview,
-                color: AppColors.blackColor,
-                size: 12.0,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-
-              SizedBox(
-                width: double.infinity,
-                height: 200.0,
-                child: LineChart(
-                  LineChartData(
-                    lineTouchData: LineTouchData(enabled: true),
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: data,
-                        isCurved: true,
-                        barWidth: 2,
-                        color: AppColors.violetColor,
-                      ),
-                    ],
-                  ),
-                  swapAnimationDuration:
-                      const Duration(milliseconds: 150), // Optional
-                  swapAnimationCurve: Curves.linear, // Optional
-                ),
-              ),
-
-              const SizedBox(
-                height: 16.0,
-              ),
-
-              //Pi chart
-              AppText(
-                StringData.numbersPolls,
-                color: AppColors.blackColor,
-                size: 15.0,
-                weight: FontWeight.bold,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              Row(
-                children: const [],
-              ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //Public button
-                  InkWell(
-                    onTap: (() {
-                      setState(() {
-                        isPublic = true;
-                      });
-                    }),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: isPublic
-                          ? BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  topRight: Radius.circular(10.0)),
-                              color: AppColors.greySkyColor)
-                          : null,
-                      width: width / 2.3,
-                      height: 40.0,
+          child: StreamBuilder<Object>(
+              stream: null,
+              builder: (context, snapshot) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
                       child: AppText(
-                        StringData.public,
-                        color: isPublic
-                            ? AppColors.blueBgColor
-                            : AppColors.violetColor,
-                        weight: isPublic ? FontWeight.bold : FontWeight.normal,
-                        size: isPublic ? 20.0 : 15.0,
+                        StringData.history,
+                        color: AppColors.blueBgColor,
+                        weight: FontWeight.bold,
+                        size: 20.0,
                       ),
                     ),
-                  ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    // Overview for last 7 days
+                    AppText(
+                      StringData.overview,
+                      color: AppColors.blackColor,
+                      size: 12.0,
+                    ),
+                    const SizedBox(
+                      height: 12.0,
+                    ),
 
-                  // Private button
-                  InkWell(
-                    onTap: (() {
-                      setState(() {
-                        isPublic = false;
-                      });
-                    }),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: (isPublic != true)
-                          ? BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  topRight: Radius.circular(10.0)),
-                              color: AppColors.greySkyColor)
-                          : null,
-                      width: width / 2.3,
-                      height: 40.0,
-                      child: AppText(
-                        StringData.private,
-                        color: (isPublic != true)
-                            ? AppColors.blueBgColor
-                            : AppColors.violetColor,
-                        weight: (isPublic != true)
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        size: (isPublic != true) ? 20.0 : 15.0,
+                    SizedBox(
+                      width: double.infinity,
+                      height: 200.0,
+                      child: LineChart(
+                        LineChartData(
+                          lineTouchData: LineTouchData(enabled: true),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: data,
+                              isCurved: true,
+                              barWidth: 2,
+                              color: AppColors.violetColor,
+                            ),
+                          ],
+                        ),
+                        swapAnimationDuration:
+                            const Duration(milliseconds: 150), // Optional
+                        swapAnimationCurve: Curves.linear, // Optional
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: width * .01),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 15.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: const Radius.circular(10.0),
-                        bottomRight: const Radius.circular(10.0),
-                        topLeft: isPublic
-                            ? const Radius.circular(0.0)
-                            : const Radius.circular(10.0),
-                        topRight: !isPublic
-                            ? const Radius.circular(0.0)
-                            : const Radius.circular(10.0)),
-                    color: AppColors.greySkyColor),
-                width: double.infinity,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return PollsWidgets.pollFirstTemplate(
-                          title: StringData.pollTitle,
-                          subTitle: StringData.pollSousTitle,
-                          trailing: '75',
-                          action: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        FinalVoteTemplate(Vote.initial())));
-                          });
-                    }),
-              )
-            ],
-          ),
+
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+
+                    //List of vote
+                    AppText(
+                      StringData.numbersPolls,
+                      color: AppColors.blackColor,
+                      size: 15.0,
+                      weight: FontWeight.bold,
+                    ),
+                    const SizedBox(
+                      height: 12.0,
+                    ),
+                    Row(
+                      children: const [],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //Public button
+                        InkWell(
+                          onTap: (() {
+                            setState(() {
+                              isPublic = true;
+                            });
+                          }),
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: isPublic
+                                ? BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0)),
+                                    color: AppColors.greySkyColor)
+                                : null,
+                            width: width / 2.3,
+                            height: 40.0,
+                            child: AppText(
+                              StringData.public,
+                              color: isPublic
+                                  ? AppColors.blueBgColor
+                                  : AppColors.violetColor,
+                              weight: isPublic
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              size: isPublic ? 20.0 : 15.0,
+                            ),
+                          ),
+                        ),
+
+                        // Private button
+                        InkWell(
+                          onTap: (() {
+                            setState(() {
+                              isPublic = false;
+                            });
+                          }),
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: (isPublic != true)
+                                ? BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0)),
+                                    color: AppColors.greySkyColor)
+                                : null,
+                            width: width / 2.3,
+                            height: 40.0,
+                            child: AppText(
+                              StringData.private,
+                              color: (isPublic != true)
+                                  ? AppColors.blueBgColor
+                                  : AppColors.violetColor,
+                              weight: (isPublic != true)
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              size: (isPublic != true) ? 20.0 : 15.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    StreamBuilder(
+                      stream: ref.read(voteController).getOldVote(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return const Center(
+                            child: AppText("Erreur de chargement"),
+                          );
+                        } else if (snapshot.hasData) {
+                          Map<String, List<Vote>> votes =
+                              snapshot.data ?? {"PRIVATE": [], "PUBLIC": []};
+                          List<Vote> publicVotes = votes["PUBLIC"]!;
+                          List<Vote> privateVotes = votes["PRIVATE"]!;
+                          //List<Vote> listes = publicVotes + privateVotes;
+
+                          return Container(
+                            margin:
+                                EdgeInsets.symmetric(horizontal: width * .01),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15.0, vertical: 15.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: const Radius.circular(10.0),
+                                    bottomRight: const Radius.circular(10.0),
+                                    topLeft: isPublic
+                                        ? const Radius.circular(0.0)
+                                        : const Radius.circular(10.0),
+                                    topRight: !isPublic
+                                        ? const Radius.circular(0.0)
+                                        : const Radius.circular(10.0)),
+                                color: AppColors.greySkyColor),
+                            width: double.infinity,
+                            child: isPublic && publicVotes.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 60),
+                                    child: AppText(
+                                      "Aucun vote éffectué ici",
+                                      align: TextAlign.center,
+                                      color: AppColors.blackColor,
+                                    ),
+                                  )
+                                : !isPublic && privateVotes.isEmpty
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 60),
+                                        child: AppText(
+                                            "Aucun vote éffectué ici",
+                                            align: TextAlign.center,
+                                            color: AppColors.blackColor),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const BouncingScrollPhysics(),
+                                        itemCount: isPublic
+                                            ? publicVotes.length
+                                            : privateVotes.length,
+                                        itemBuilder: (context, index) {
+                                          return PollsWidgets.pollFirstTemplate(
+                                              title: isPublic
+                                                  ? publicVotes[index].title
+                                                  : privateVotes[index].title,
+                                              subTitle: isPublic
+                                                  ? publicVotes[index]
+                                                      .listeOptions[0]
+                                                      .fullName
+                                                  : privateVotes[index]
+                                                      .listeOptions[0]
+                                                      .fullName,
+                                              trailing: '75',
+                                              action: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            FinalVoteTemplate(
+                                                              isPublic
+                                                                  ? publicVotes[
+                                                                      index]
+                                                                  : privateVotes[
+                                                                      index],
+                                                            )));
+                                              });
+                                        }),
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );
