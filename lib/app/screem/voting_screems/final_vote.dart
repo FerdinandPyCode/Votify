@@ -1,29 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/models/options_model.dart';
+import 'package:votify_2/app/core/models/user_vote_model.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation.dart';
 import '../../core/generated/widgets/dial_button.dart';
 
-class FinalVoteTemplate extends StatefulWidget {
+class FinalVoteTemplate extends ConsumerStatefulWidget {
   final Vote vote;
   const FinalVoteTemplate(this.vote, {super.key});
 
   @override
-  State<FinalVoteTemplate> createState() => _FinalVoteTemplateState();
+  ConsumerState<FinalVoteTemplate> createState() => _FinalVoteTemplateState();
 }
 
-class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
+class _FinalVoteTemplateState extends ConsumerState<FinalVoteTemplate> {
   int nbrVoters = 0;
-
+  String codeOpt = "OPT1";
+  Map<String, int> proportionVotes = {};
   @override
   void initState() {
     nbrVoters = widget.vote.listeVote.length;
+    getSelected();
     super.initState();
+  }
+
+  void getSelected() {
+    for (Option opt in widget.vote.listeOptions) {
+      proportionVotes[opt.code] = 0;
+    }
+    int som = 0;
+    for (UserVote uV in widget.vote.listeVote) {
+      if (uV.userId == ref.read(userAuth).userId) {
+        codeOpt = uV.optionchoisi;
+      }
+      proportionVotes[uV.optionchoisi] = proportionVotes[uV.optionchoisi]! + 1;
+      som += 1;
+    }
   }
 
   @override
@@ -108,22 +128,37 @@ class _FinalVoteTemplateState extends State<FinalVoteTemplate> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              //(optionList[index]['isBest'] == true)
-                              //?
-                              Image.asset(
-                                AssetData.valide,
-                                color: AppColors.blueBgColor,
-                              ),
-                              //: const AppText(''),
+                              (codeOpt == widget.vote.listeOptions[index].code)
+                                  ? Image.asset(
+                                      AssetData.valide,
+                                      color: AppColors.blueBgColor,
+                                    )
+                                  : const AppText(''),
                               const SizedBox(
                                 width: 5.0,
                               ),
-                              AppText(
-                                "50",
-                                weight: FontWeight.bold,
-                                color: AppColors.blueBgColor,
-                                size: 20.0,
-                              )
+                              // widget.vote.electionType == "PUBLIC"
+                              //     ?
+                              (DateTime.parse(widget.vote.dateEnd)
+                                              .millisecondsSinceEpoch >
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch ||
+                                      widget.vote.electionType == "PUBLIC")
+                                  ? AppText(
+                                      (((proportionVotes[widget
+                                                      .vote
+                                                      .listeOptions[index]
+                                                      .code]!) /
+                                                  (widget
+                                                      .vote.listeVote.length)) *
+                                              100)
+                                          .toString(),
+                                      weight: FontWeight.bold,
+                                      color: AppColors.blueBgColor,
+                                      size: 20.0,
+                                    )
+                                  : const AppText("")
+                              //: const AppText(""),
                             ],
                           )
                         ],

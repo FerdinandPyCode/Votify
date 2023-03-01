@@ -209,3 +209,4 @@ showLogoutModal(BuildContext context, WidgetRef ref) {
         );
       });
 }
+
