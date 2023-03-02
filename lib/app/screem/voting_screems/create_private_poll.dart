@@ -416,7 +416,7 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                                     logd(emails);
                                     if (emails.isNotEmpty) {
                                       setState(() {
-                                        isMailListOkay = false;
+                                        isMailListOkay = true;
                                       });
                                     }
                                   }),

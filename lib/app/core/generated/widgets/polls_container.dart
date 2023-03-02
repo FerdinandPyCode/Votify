@@ -78,9 +78,11 @@ class PollsWidgets {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                StringData.pollTitle,
+                title,
+                maxLines: 1,
                 color: AppColors.blackColor,
                 weight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(
                 height: 10.0,
