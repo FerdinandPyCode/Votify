@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/conf.dart';
+import 'package:votify_2/app/core/controller/notif_controller.dart';
 import 'package:votify_2/app/core/controller/user_controller.dart';
 import 'package:votify_2/app/core/controller/vote_controller.dart';
 import 'package:votify_2/app/core/services/dio_client.dart';
@@ -35,7 +36,9 @@ Provider<CollectionReference> notifRef =
 final userAuth = ChangeNotifierProvider<UserAuth>((ref) => UserAuth());
 final userController = Provider((ref) => UserController(ref));
 final voteController = Provider<VoteController>((ref) => VoteController(ref));
-// final settingController = Provider<SettingsController>((ref) => SettingsController(ref));
+final settingController =
+    Provider<NotifController>((ref) => NotifController(ref));
+
 // final mainController = Provider<MainController>((ref) => MainController(ref));
 // final livreController = Provider<LivreController>((ref) => LivreController(ref));
 // final catController = Provider<CategoryController>((ref) => CategoryController(ref));

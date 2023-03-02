@@ -10,7 +10,10 @@ class VoteController {
   VoteController(this.ref);
 
   Future<void> addVote(Vote vote) async {
-    await ref.read(voteRef).add(vote.toMap());
+    if (DateTime.parse(vote.dateEnd).millisecondsSinceEpoch <
+        DateTime.now().millisecondsSinceEpoch) {
+      await ref.read(voteRef).add(vote.toMap());
+    }
   }
 
   Stream<Map<String, List<Vote>>> getAllVote() {
@@ -22,20 +25,23 @@ class VoteController {
 
       Map<String, List<Vote>> votes = {"PRIVATE": [], "PUBLIC": []};
       for (Vote v in es) {
-        bool can = true;
+        if (DateTime.parse(v.dateEnd).millisecondsSinceEpoch <
+            DateTime.now().millisecondsSinceEpoch) {
+          bool can = true;
 
-        for (UserVote uV in v.listeVote) {
-          if (uV.userId == ref.read(userAuth).userId) {
-            can = false;
-            break;
+          for (UserVote uV in v.listeVote) {
+            if (uV.userId == ref.read(userAuth).userId) {
+              can = false;
+              break;
+            }
           }
-        }
-        if (can) {
-          if (v.electionType == "PUBLIC") {
-            votes['PUBLIC']!.add(v);
-          } else {
-            if (v.votersEmail.contains(ref.read(userAuth).me.email)) {
-              votes['PRIVATE']!.add(v);
+          if (can) {
+            if (v.electionType == "PUBLIC") {
+              votes['PUBLIC']!.add(v);
+            } else {
+              if (v.votersEmail.contains(ref.read(userAuth).me.email)) {
+                votes['PRIVATE']!.add(v);
+              }
             }
           }
         }
