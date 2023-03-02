@@ -21,8 +21,8 @@ Provider<CollectionReference> userRef =
     Provider((ref) => getFirestore().collection("Users"));
 Provider<CollectionReference> voteRef =
     Provider((ref) => getFirestore().collection("Votes"));
-Provider<CollectionReference> voteOptionsRef =
-    Provider((ref) => getFirestore().collection("VoteOptions"));
+Provider<CollectionReference> notifRef =
+    Provider((ref) => getFirestore().collection("notifications"));
 // Provider<CollectionReference> catRef = Provider((ref) => getFirestore().collection("Categories"));
 // Provider<CollectionReference> catUsersRef = Provider((ref) => getFirestore().collection("CategoriesUsers"));
 // Provider<CollectionReference> livreRef = Provider((ref) => getFirestore().collection("Livres"));
