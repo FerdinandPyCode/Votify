@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
@@ -33,8 +38,11 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
   int optionCount = 2;
   // ignore: deprecated_member_use
   List<TextEditingController> controllers = [];
+  bool isMailListOkay = false;
+
   //Pour contenir les controllers des champs de textes
   List<String> options = [];
+  List<String> emails = [];
 
   DateTime? startCurentDate = DateTime.now();
   DateTime? endCurentDate = DateTime.now();
@@ -402,8 +410,15 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                                 ])),
                                 //  uUpload file
                                 InkWell(
-                                  onTap: (() {
-                                    treatFile();
+                                  onTap: (() async {
+                                    await treatFile();
+                                    logd('---------------------------');
+                                    logd(emails);
+                                    if (emails.isNotEmpty) {
+                                      setState(() {
+                                        isMailListOkay = false;
+                                      });
+                                    }
                                   }),
                                   child: Card(
                                     shadowColor: AppColors.greyColor,
@@ -416,6 +431,19 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                           : const SizedBox(
                               height: 12.0,
                             ),
+                      const SizedBox(
+                        height: 12.0,
+                      ),
+                      widget.isPrivate && !isMailListOkay
+                          ? Align(
+                              alignment: Alignment.centerRight,
+                              child: AppText(
+                                "Veuillez uploader la liste des votants",
+                                color: AppColors.redColor,
+                              ),
+                            )
+                          : const AppText(''),
+
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -482,25 +510,47 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
                                     vote.electionType = 'PRIVE';
 
                                     //Will be generated from excel file
-                                    vote.votersEmail = [
-                                      'toto@gmail.com',
-                                      'tata@gmail.com',
-                                      'mimi@gmail.com',
-                                      'baba@gmail.com',
-                                      'allowakouferdinand@gmail.com',
-                                      'sodokinmarius@gmail.com',
-                                      'oseesoke@gmail.com',
-                                      'test.tensorunit@gmail.com',
-                                      'hernandezdecos96@gmail.com',
-                                    ];
+                                    // vote.votersEmail = [
+                                    //   'toto@gmail.com',
+                                    //   'tata@gmail.com',
+                                    //   'mimi@gmail.com',
+                                    //   'baba@gmail.com',
+                                    //   'allowakouferdinand@gmail.com',
+                                    //   'sodokinmarius@gmail.com',
+                                    //   'oseesoke@gmail.com',
+                                    //   'test.tensorunit@gmail.com',
+                                    //   'hernandezdecos96@gmail.com',
+                                    // ];
+                                    logd("high");
+                                    logd(vote.votersEmail);
+                                    logd(emails);
+                                    if (emails.isEmpty) {
+                                      showFlushBar(
+                                          context,
+                                          "Lecture d'email",
+                                          "Aucun mail trouvés !!\n\nConseils\n\n"
+                                              "-Les mails doivent appartenir au premier sheet du fichier\n-"
+                                              "La colonne des mails doit se nommer <<email>>");
+                                    } else {
+                                      vote.votersEmail = emails;
+                                    }
                                   }
 
                                   logd(vote);
+                                  if ((widget.isPrivate &&
+                                          vote.votersEmail.isNotEmpty) ||
+                                      !widget.isPrivate) {
+                                    await ref
+                                        .read(voteController)
+                                        .addVote(vote)
+                                        .then((value) => Fluttertoast.showToast(
+                                            msg: "Vote ajouté avec succès !!"));
+                                    initializeAll();
+                                  }
 
-                                  await ref.read(voteController).addVote(vote);
-                                  initializeAll();
                                   setState(() {
                                     isLoading = false;
+                                    isMailListOkay = false;
                                   });
                                 }
 
@@ -546,30 +596,71 @@ class _CreatePrivatePollState extends ConsumerState<CreatePrivatePoll> {
   }
 
   Future<List<String>> treatFile() async {
-    // Use FilePicker to pick files in Flutter Web
+    try {
+      FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx'],
+        allowMultiple: false,
+      );
 
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xlsx'],
-      allowMultiple: false,
-    );
+      // file might be picked
 
-    // file might be picked
+      if (pickedFile != null) {
+        String file = pickedFile.paths.first!;
+        var bytes = File(file).readAsBytesSync();
+        var excel = Excel.decodeBytes(bytes);
+        var table = excel.tables.keys.first;
 
-    if (pickedFile != null) {
-      var bytes = pickedFile.files.single.bytes;
-      var excel = Excel.decodeBytes(bytes!);
-      for (var table in excel.tables.keys) {
-        logd(table); //sheet Name
-        logd(excel.tables[table]!.maxCols);
-        logd(excel.tables[table]!.maxRows);
+        int i = 0;
+        int emailColIndex = 0;
+        bool hasEmaiCol = false;
+
         for (var row in excel.tables[table]!.rows) {
-          logd("$row");
+          if (i == 0) {
+            for (int j = 0; j < excel.tables[table]!.maxCols; j++) {
+              if (row[j]!.value.toString() == 'email') {
+                logd("Okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkay");
+                hasEmaiCol = true;
+                emailColIndex = j;
+                logd(emailColIndex);
+              }
+            }
+          } else {
+            if (hasEmaiCol) {
+              emails.add(row[emailColIndex]!.value.toString());
+            } else {
+              break;
+            }
+          }
+
+          i += 1;
         }
+        logd(emails);
       }
+    } catch (e, ee) {
+      showFlushBar(
+          context,
+          "Lecture d'email",
+          "Impossible de lire les mails !\n\nConseils\n\n"
+              "-Les mails doivent appartenir au premier sheet du fichier\n-"
+              "La colonne des mails doit se nommer <<email>>");
+      logd(e);
+      logd(ee);
+    }
+    if (emails.isEmpty) {
+      showFlushBar(
+          context,
+          "Lecture d'email",
+          "Aucun mail trouvés !!\n\nConseils\n\n"
+              "-Les mails doivent appartenir au premier sheet du fichier\n-"
+              "La colonne des mails doit se nommer <<email>>");
+    } else {
+      setState(() {
+        isMailListOkay = true;
+      });
     }
 
-    return [];
+    return emails;
   }
 }
 
