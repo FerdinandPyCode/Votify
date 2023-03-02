@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:votify_2/app/core/models/notif_model.dart';
 import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/models/user_vote_model.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
@@ -13,6 +14,21 @@ class VoteController {
     if (DateTime.parse(vote.dateEnd).millisecondsSinceEpoch <
         DateTime.now().millisecondsSinceEpoch) {
       await ref.read(voteRef).add(vote.toMap());
+
+      if (vote.electionType == 'PRIVATE') {
+        for (String mail in vote.votersEmail) {
+          NotifModel nM = NotifModel(
+              key: '',
+              title: 'Nouveau vote',
+              description: "Nouveau vote pour vous",
+              createdAt: DateTime.now().toString().substring(0, 19),
+              to: mail,
+              from: ref.read(userAuth).me.email,
+              type: "NEW VOTE",
+              seen: 0);
+          await ref.read(notifController).sendNotif(nM);
+        }
+      }
     }
   }
 

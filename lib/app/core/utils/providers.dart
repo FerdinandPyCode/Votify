@@ -36,7 +36,7 @@ Provider<CollectionReference> notifRef =
 final userAuth = ChangeNotifierProvider<UserAuth>((ref) => UserAuth());
 final userController = Provider((ref) => UserController(ref));
 final voteController = Provider<VoteController>((ref) => VoteController(ref));
-final settingController =
+final notifController =
     Provider<NotifController>((ref) => NotifController(ref));
 
 // final mainController = Provider<MainController>((ref) => MainController(ref));

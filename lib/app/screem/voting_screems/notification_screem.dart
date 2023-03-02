@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/models/notif_model.dart';
+import 'package:votify_2/app/core/utils/providers.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/generated/my_app_bar.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/bottom_navigation.dart';
 import '../../core/generated/widgets/dial_button.dart';
 
-class NotificationScreen extends StatefulWidget {
+class NotificationScreen extends ConsumerStatefulWidget {
   const NotificationScreen({super.key});
 
   @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
+  ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
+class _NotificationScreenState extends ConsumerState<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,39 +53,65 @@ class _NotificationScreenState extends State<NotificationScreen> {
               const SizedBox(
                 height: 16.0,
               ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: 8,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 30.0, horizontal: 20.0),
-                      width: double.infinity,
-                      height: 80.0,
-                      decoration: BoxDecoration(
-                          color: AppColors.greySkyColor,
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 1.5, color: AppColors.blueBgColor))),
-                      child: Row(
-                        children: [
-                          Image.asset(AssetData.notificationIcONE),
-                          const SizedBox(
-                            width: 5.0,
+              StreamBuilder(
+                  stream: ref.watch(notifController).myNotifs(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<NotifModel> liste = snapshot.data ?? [];
+                      if (liste.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 50),
+                          child: AppText(
+                            "Aucune notification pour le moment !",
+                            color: AppColors.blackColor,
                           ),
-                          Wrap(
-                            children: [
-                              AppText(
-                                StringData.notificationE,
-                                color: AppColors.blackColor,
-                                softwrap: true,
+                        );
+                      }
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: liste.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 30.0, horizontal: 20.0),
+                              width: double.infinity,
+                              height: 80.0,
+                              decoration: BoxDecoration(
+                                  color: AppColors.greySkyColor,
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1.5,
+                                          color: AppColors.blueBgColor))),
+                              child: Row(
+                                children: [
+                                  Image.asset(AssetData.notificationIcONE),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Wrap(
+                                    children: [
+                                      AppText(
+                                        liste[index].title,
+                                        color: AppColors.blackColor,
+                                        softwrap: true,
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
+                            );
+                          });
+                    } else if (snapshot.hasError) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 50),
+                        child: AppText("Une erreur est survenue !"),
+                      );
+                    } else {
+                      return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 50),
+                          child: CircularProgressIndicator());
+                    }
                   }),
             ],
           ),

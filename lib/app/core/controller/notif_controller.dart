@@ -9,7 +9,7 @@ class NotifController {
   );
 
   Future<void> sendNotif(NotifModel model) async {
-    if (model.to == ref.read(userAuth).userId) {
+    if (model.to == ref.read(userAuth).me.email) {
       return;
     }
     await ref.read(notifRef).add(model.toMap());
@@ -28,7 +28,7 @@ class NotifController {
   Stream<List<NotifModel>> myNotifs() {
     return ref
         .read(notifRef)
-        .where("to", isEqualTo: ref.read(userAuth).userId)
+        .where("to", isEqualTo: ref.read(userAuth).me.email)
         .orderBy("createdAt", descending: true)
         .limitToLast(30)
         .snapshots()
