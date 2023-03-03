@@ -85,13 +85,14 @@ class AppImageNetwork extends StatelessWidget {
     return isProgress
         ? const CupertinoActivityIndicator()
         : urrl.startsWith('http')
-            ? Image.network(urrl
+            ? Image.network(
+                urrl,
                 //fit: fit,
-                // placeholder: (BuildContext context, String url) {
-                //   return const CupertinoActivityIndicator();
-                // },
+                loadingBuilder: (context, child, loadingProgress) {
+                  return const CupertinoActivityIndicator();
+                },
                 //imageUrl: urrl,
-                )
+              )
             : Image.file(File(urrl), fit: fit);
   }
 }
