@@ -9,6 +9,7 @@ import 'package:badges/badges.dart' as badges;
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   final Widget leadingWidget;
   final double nbrNotification;
+  final String profilUrl;
   bool isSecond = false;
   Widget? disconnectWidget;
   MyAppBar(
@@ -16,7 +17,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
       required this.leadingWidget,
       this.nbrNotification = 1,
       this.isSecond = false,
-      this.disconnectWidget});
+      this.disconnectWidget, this.profilUrl=''});
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +58,14 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
                       MaterialPageRoute(
                           builder: (context) => const ProfilScreem()));
                 },
-                child: AppImageNetwork(
-                            url: UtilsFonction.profile,
-                          ),
+                child: CircleAvatar(
+                  child: AppImageNetwork(url: UtilsFonction.profile,)
+                  //Image.asset(
+                            // profilUrl.isNotEmpty?profilUrl:AssetData.profilVotify,
+                              //width: 40.0,
+                             // height:40.0,
+                           // ),
+                ),
               )
       ],
       elevation: 0.0,

@@ -52,6 +52,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
+        profilUrl: profil,
         leadingWidget: IconButton(
             onPressed: () {},
             icon: Icon(Icons.menu_sharp, color: AppColors.blueBgColor)),
@@ -84,9 +85,9 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                         width: 90,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
-                          child: AppImageNetwork(
-                            url: profil.isEmpty ? default_user_pic : profil,
-                          ),
+                          child:AppImageNetwork(
+                            url: profil,
+                          )//:Image.asset(AssetData.profilVotify),
                         ),
                       ),
                     ),
@@ -156,6 +157,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                     color: AppColors.greySkyColor),
                 child: Column(
                   children: [
+                    
                     //Email
 
                     ListTile(

@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
 
@@ -59,8 +60,7 @@ class UtilsFonction {
   }
 }
 
-const String default_user_pic =
-    "https://madahst.com/wp-content/uploads/2020/08/ava.png";
+String default_user_pic =AssetData.profilVotify;
 
 class AppImageNetwork extends StatelessWidget {
   final String url;
@@ -89,7 +89,7 @@ class AppImageNetwork extends StatelessWidget {
                 urrl,
                 //fit: fit,
                 loadingBuilder: (context, child, loadingProgress) {
-                  return const CupertinoActivityIndicator();
+                  return  Image.asset( AssetData.profilVotify);
                 },
                 //imageUrl: urrl,
               )

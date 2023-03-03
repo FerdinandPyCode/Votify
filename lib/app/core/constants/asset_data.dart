@@ -25,7 +25,7 @@ static String jouet= '$imagesFolderPng/jouet.png';
 static String micro= '$imagesFolderPng/micro.png';
 static String pollPhone= '$imagesFolderPng/poll_phone.png';
 static String greatMicro= '$imagesFolderPng/great_micro.png';
-
+static String profilVotify='$imagesFolderPng/profil_votify.png';
 
                         //Icons 
 static String publicIcon= '$iconsFolder/public.png';
