@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,13 +85,12 @@ class AppImageNetwork extends StatelessWidget {
     return isProgress
         ? const CupertinoActivityIndicator()
         : urrl.startsWith('http')
-            ? CachedNetworkImage(
-                //urrl,
+            ? Image.network(
+                urrl,
                 fit: fit,
-                placeholder: (co, t0) {
+                loadingBuilder: (co, t0, t) {
                   return Image.asset(AssetData.profilVotify);
                 },
-                imageUrl: urrl,
               )
             : Image.file(File(urrl), fit: fit);
   }

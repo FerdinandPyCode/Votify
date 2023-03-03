@@ -58,20 +58,17 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
                       MaterialPageRoute(
                           builder: (context) => const ProfilScreem()));
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      child: AppImageNetwork(
-                    url: UtilsFonction.profile,
-                    fit: BoxFit.contain,
-                  )
-                      //Image.asset(
-                      // profilUrl.isNotEmpty?profilUrl:AssetData.profilVotify,
-                      //width: 40.0,
-                      // height:40.0,
-                      // ),
-                      ),
-                ),
+                child: CircleAvatar(
+                    child: AppImageNetwork(
+                  url: UtilsFonction.profile,
+                  fit: BoxFit.contain,
+                )
+                    //Image.asset(
+                    // profilUrl.isNotEmpty?profilUrl:AssetData.profilVotify,
+                    //width: 40.0,
+                    // height:40.0,
+                    // ),
+                    ),
               )
       ],
       elevation: 0.0,
