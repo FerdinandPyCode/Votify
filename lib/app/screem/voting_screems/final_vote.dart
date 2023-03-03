@@ -143,7 +143,9 @@ class _FinalVoteTemplateState extends ConsumerState<FinalVoteTemplate> {
                                               .millisecondsSinceEpoch >
                                           DateTime.now()
                                               .millisecondsSinceEpoch ||
-                                      widget.vote.electionType == "PUBLIC")
+                                      widget.vote.electionType == "PUBLIC" ||
+                                      widget.vote.creator ==
+                                          ref.read(userAuth).userId)
                                   ? AppText(
                                       (((proportionVotes[widget
                                                       .vote
@@ -152,6 +154,7 @@ class _FinalVoteTemplateState extends ConsumerState<FinalVoteTemplate> {
                                                   (widget
                                                       .vote.listeVote.length)) *
                                               100)
+                                          .ceil()
                                           .toString(),
                                       weight: FontWeight.bold,
                                       color: AppColors.blueBgColor,

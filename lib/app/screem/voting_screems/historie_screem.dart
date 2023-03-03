@@ -281,7 +281,7 @@ class _MyHistorieScreemState extends ConsumerState<MyHistorieScreem> {
                                                   : privateVotes[index]
                                                       .listeOptions[0]
                                                       .fullName,
-                                              trailing: '75',
+                                              //trailing: '75',
                                               action: () {
                                                 Navigator.push(
                                                     context,
