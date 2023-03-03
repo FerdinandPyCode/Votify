@@ -194,7 +194,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                           setState(() {});
                         },
                             controller: _usernameController,
-                            hintText: 'username',
+                            hintText: ref.watch(userAuth).me.username,
                             title: 'Nom d\'utilisateur');
                       }),
                       leading: IconButton(
@@ -203,7 +203,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                             setState(() {});
                           },
                               controller: _usernameController,
-                              hintText: StringData.password,
+                              hintText: ref.watch(userAuth).me.username,
                               title:
                                   '${StringData.enterYour}${StringData.password}');
                         },
@@ -223,7 +223,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                             setState(() {});
                           },
                               controller: _usernameController,
-                              hintText: 'username',
+                              hintText: ref.watch(userAuth).me.username,
                               title: 'Nom d\'utilisateur');
                         },
                         controller: _usernameController,
@@ -253,7 +253,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                           setState(() {});
                         },
                             controller: _nameController,
-                            hintText: StringData.userNameExemple.split(' ')[0],
+                            hintText: ref.watch(userAuth).me.lastName,
                             title: '${StringData.enterYour}${StringData.name}');
                       }),
                       leading: IconButton(
@@ -262,8 +262,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                             setState(() {});
                           },
                               controller: _nameController,
-                              hintText:
-                                  StringData.userNameExemple.split(' ')[0],
+                              hintText: ref.watch(userAuth).me.lastName,
                               title:
                                   '${StringData.enterYour}${StringData.name}');
                         },
@@ -283,8 +282,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                             setState(() {});
                           },
                               controller: _nameController,
-                              hintText:
-                                  StringData.userNameExemple.split(' ')[0],
+                              hintText: ref.watch(userAuth).me.lastName,
                               title:
                                   '${StringData.enterYour}${StringData.name}');
                         },
@@ -302,7 +300,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                               ),
                             ),
                             border: InputBorder.none,
-                            hintText: ref.read(userAuth).me.lastName,
+                            hintText: ref.watch(userAuth).me.lastName,
                             hintStyle: TextStyle(
                                 color: AppColors.blackColor,
                                 fontWeight: FontWeight.bold,
@@ -320,7 +318,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                           setState(() {});
                         },
                             controller: _surnameController,
-                            hintText: StringData.userNameExemple.split(' ')[1],
+                            hintText: ref.watch(userAuth).me.firstName,
                             title:
                                 '${StringData.enterYour}${StringData.surname}');
                       }),
@@ -330,8 +328,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                             setState(() {});
                           },
                               controller: _surnameController,
-                              hintText:
-                                  StringData.userNameExemple.split(' ')[1],
+                              hintText: ref.watch(userAuth).me.firstName,
                               title:
                                   '${StringData.enterYour}${StringData.surname}');
                         },
@@ -351,8 +348,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                             setState(() {});
                           },
                               controller: _surnameController,
-                              hintText:
-                                  StringData.userNameExemple.split(' ')[1],
+                              hintText: ref.watch(userAuth).me.firstName,
                               title:
                                   '${StringData.enterYour}${StringData.surname}');
                         },

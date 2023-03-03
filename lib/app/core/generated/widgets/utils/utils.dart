@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ class UtilsFonction {
     return '${datetime!.year}-${datetime.month}-${datetime.day}';
   }
 
+  static String profile = '';
   //Import excel file
   static Future<void> importExcelFile(context) async {
     try {
@@ -58,14 +58,21 @@ class UtilsFonction {
         .showSnackBar(SnackBar(content: AppText(text)));
   }
 }
-const String default_user_pic = "https://madahst.com/wp-content/uploads/2020/08/ava.png";
+
+const String default_user_pic =
+    "https://madahst.com/wp-content/uploads/2020/08/ava.png";
 
 class AppImageNetwork extends StatelessWidget {
   final String url;
   final BoxFit fit;
   final bool isProgress;
 
-  AppImageNetwork({Key? key, required this.url, this.fit = BoxFit.contain, this.isProgress = false}) : super(key: key);
+  AppImageNetwork(
+      {Key? key,
+      required this.url,
+      this.fit = BoxFit.contain,
+      this.isProgress = false})
+      : super(key: key);
   String urrl = "";
 
   @override
@@ -78,13 +85,13 @@ class AppImageNetwork extends StatelessWidget {
     return isProgress
         ? const CupertinoActivityIndicator()
         : urrl.startsWith('http')
-            ? CachedNetworkImage(
-                fit: fit,
-                placeholder: (BuildContext context, String url) {
-                  return const CupertinoActivityIndicator();
-                },
-                imageUrl: urrl,
-              )
+            ? Image.network(urrl
+                //fit: fit,
+                // placeholder: (BuildContext context, String url) {
+                //   return const CupertinoActivityIndicator();
+                // },
+                //imageUrl: urrl,
+                )
             : Image.file(File(urrl), fit: fit);
   }
 }

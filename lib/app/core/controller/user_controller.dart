@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:votify_2/app/core/constants/conf.dart';
+import 'package:votify_2/app/core/generated/widgets/utils/utils.dart';
 import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
@@ -109,6 +110,7 @@ class UserController {
         await UserController(ref).getUser(ref.read(mAuthRef).currentUser!.uid);
     logd(userModel);
     ref.read(userAuth.notifier).me = userModel;
+    UtilsFonction.profile = ref.read(userAuth.notifier).me.profilePic;
     return userModel;
   }
 

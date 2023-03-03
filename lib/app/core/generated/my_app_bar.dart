@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/constants/color.dart';
+import 'package:votify_2/app/core/generated/widgets/utils/utils.dart';
 import '../../screem/voting_screems/notification_screem.dart';
 import '../../screem/voting_screems/profil.dart';
 import '../constants/asset_data.dart';
@@ -56,13 +57,9 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
                       MaterialPageRoute(
                           builder: (context) => const ProfilScreem()));
                 },
-                child: CircleAvatar(
-                  backgroundColor: AppColors.backgroundColor,
-                  maxRadius: height * .06,
-                  child: Image.asset(
-                    AssetData.google,
-                  ),
-                ),
+                child: AppImageNetwork(
+                            url: UtilsFonction.profile,
+                          ),
               )
       ],
       elevation: 0.0,
