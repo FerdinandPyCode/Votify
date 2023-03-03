@@ -4,6 +4,7 @@ import 'package:votify_2/app/core/models/notif_model.dart';
 import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/models/user_vote_model.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
+import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
 
 class VoteController {
@@ -19,8 +20,8 @@ class VoteController {
         for (String mail in vote.votersEmail) {
           NotifModel nM = NotifModel(
               key: '',
-              title: 'Nouveau vote',
-              description: "Nouveau vote pour vous",
+              title: 'Nouveau Vote Créé pour vous',
+              description: "Nouveau vote pour vous, passez à l'action !",
               createdAt: DateTime.now().toString().substring(0, 19),
               to: mail,
               from: ref.read(userAuth).me.email,
@@ -88,7 +89,7 @@ class VoteController {
     return liste;
   }
 
-  Future<void> voteNow(String voteId, String option) async {
+  Future<void> voteNow(String voteId, String option, Vote vote) async {
     await ref.read(voteRef).doc(voteId).update({
       "listeVote": FieldValue.arrayUnion([
         {
@@ -98,6 +99,21 @@ class VoteController {
         }
       ])
     });
+    logd("--------------------------");
+    logd(vote.creator);
+    logd("--------------------------");
+    UserModel userModel = await ref.read(userController).getUser(vote.creator);
+    NotifModel m = NotifModel(
+        key: '',
+        title: "Nouveau votant",
+        description:
+            "${vote.title} a été voté par ${ref.read(userAuth).me.username}",
+        createdAt: DateTime.now().toString().substring(0, 19),
+        to: userModel.email,
+        from: ref.read(userAuth).me.email,
+        type: "NewVote",
+        seen: 0);
+    await ref.read(notifController).sendNotif(m);
   }
 
   Stream<Map<String, List<Vote>>> getOldVote() {

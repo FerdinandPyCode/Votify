@@ -186,8 +186,8 @@ class _UserVoteTemplateState extends ConsumerState<UserVoteTemplate> {
                         setState(() {
                           isLoading = true;
                         });
-                        await ref.read(voteController).voteNow(
-                            widget.vote.id, "OPT${selectedRadioTile + 1}");
+                        await ref.read(voteController).voteNow(widget.vote.id,
+                            "OPT${selectedRadioTile + 1}", widget.vote);
 
                         setState(() {
                           isLoading = false;
