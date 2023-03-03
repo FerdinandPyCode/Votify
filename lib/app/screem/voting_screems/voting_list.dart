@@ -48,7 +48,8 @@ class _VotingListScreemState extends State<VotingListScreem> {
               children: [
                 //Search widgets
                 SearchWidget(
-                  action: () {},
+                  action: () => null,
+                  onChanged: (po) => null,
                   controller: searchController,
                   hintText: StringData.searchPolls,
                 ),

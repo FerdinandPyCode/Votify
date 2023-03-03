@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/screem/home_screem/home_screem.dart';
 import 'package:votify_2/app/screem/voting_screems/historie_screem.dart';
-import 'package:votify_2/app/screem/voting_screems/seach_screem.dart';
+import 'package:votify_2/app/screem/voting_screems/vote_search_result_screem.dart';
 import '../../../constants/asset_data.dart';
 
 class MyBottomNavigation extends StatefulWidget {
@@ -106,7 +106,7 @@ class _MyBottomNavigationState extends State<MyBottomNavigation> {
         break;
       case 2:
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const SearchScreem()));
+            MaterialPageRoute(builder: (context) => const SearchVoteResult()));
         break;
       default:
     }

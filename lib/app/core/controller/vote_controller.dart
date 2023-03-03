@@ -69,13 +69,28 @@ class VoteController {
 
   Future<List<Vote>> getAllVoteFuture() async {
     List<Vote> es = [];
+    List<Vote> votes = [];
+
     await ref.read(voteRef).get().then((event) {
       for (var e in event.docs) {
         es.add(
             Vote.fromMap(e.data() as Map<String, dynamic>).copyWith(id: e.id));
       }
     });
-    return es;
+    for (Vote v in es) {
+      if (DateTime.parse(v.dateState).millisecondsSinceEpoch <
+          DateTime.now().millisecondsSinceEpoch) {
+
+        if (v.electionType == "PUBLIC") {
+          votes.add(v);
+        } else {
+          if (v.votersEmail.contains(ref.read(userAuth).me.email)) {
+            votes.add(v);
+          }
+        }
+      }
+    }
+    return votes;
   }
 
   Future<List<UserModel>> getVoteUser(List<UserVote> lUV) async {

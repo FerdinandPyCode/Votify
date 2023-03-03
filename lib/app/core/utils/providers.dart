@@ -7,6 +7,7 @@ import 'package:votify_2/app/core/constants/conf.dart';
 import 'package:votify_2/app/core/controller/notif_controller.dart';
 import 'package:votify_2/app/core/controller/user_controller.dart';
 import 'package:votify_2/app/core/controller/vote_controller.dart';
+import 'package:votify_2/app/core/models/vote_model.dart';
 import 'package:votify_2/app/core/services/dio_client.dart';
 
 final dio = Provider(
@@ -38,6 +39,7 @@ final userController = Provider((ref) => UserController(ref));
 final voteController = Provider<VoteController>((ref) => VoteController(ref));
 final notifController =
     Provider<NotifController>((ref) => NotifController(ref));
+final fetchAllVote = FutureProvider<List<Vote>>((ref) => VoteController(ref).getAllVoteFuture());
 
 // final mainController = Provider<MainController>((ref) => MainController(ref));
 // final livreController = Provider<LivreController>((ref) => LivreController(ref));

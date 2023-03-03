@@ -55,7 +55,8 @@ class _VoteProgresScreemState extends State<VoteProgresScreem> {
               children: [
                 //Search widgets
                 SearchWidget(
-                  action: () {},
+                  action: () => null,
+                  onChanged: (po) => null,
                   controller: searchController,
                   hintText: StringData.searchPolls,
                 ),

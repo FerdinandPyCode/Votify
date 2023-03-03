@@ -68,6 +68,7 @@ class _MyHomeScreemState extends ConsumerState<MyHomeScreem> {
                       MaterialPageRoute(
                           builder: (context) => const SearchVoteResult()));
                 },
+                onChanged: (p0) => null,
                 controller: searchController,
                 hintText: StringData.searchPolls,
               ),
