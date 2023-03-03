@@ -58,47 +58,34 @@ class AppInput extends StatelessWidget {
         const SizedBox(
           height: 10.0,
         ),
-        Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(radius),
-              color: AppColors.backgroundColor,
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.greyBlackColor,
-                    offset: const Offset(0, 1),
-                    spreadRadius: 1.0,
-                    blurRadius: 10.0)
-              ]),
-          child: TextFormField(
-            decoration: InputDecoration(
-
-                //contentPadding: const EdgeInsets.only(left: 2.0, bottom: 10.0),
-                hintStyle: TextStyle(color: AppColors.greyColor),
-                suffixIcon: hasSuffix ? suffixIcon : null,
-                hintText: hint,
-                focusColor: AppColors.whiteOpac,
-                iconColor: AppColors.blackColor,
-                errorBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red)),
-                border: OutlineInputBorder(
-                  gapPadding: 10.0,
-                  borderSide: BorderSide(
-                    color: AppColors.backgroundColor,
-                    width: 0.2,
-                  ),
-                  borderRadius: BorderRadius.circular(radius),
-                )),
-            obscureText: isObscure,
-            keyboardType: inputType,
-            controller: controller,
-            maxLines: maxLine,
-            validator: validator,
-            textAlign: textAlign,
-            style: TextStyle(fontSize: 15, color: AppColors.blackColor),
-            minLines: 1,
-          ),
+        TextFormField(
+          decoration: InputDecoration( 
+              //contentPadding: const EdgeInsets.only(left: 2.0, bottom: 10.0),
+              hintStyle: TextStyle(color: AppColors.greyColor),
+              suffixIcon: hasSuffix ? suffixIcon : null,
+              hintText: hint,
+              focusColor: AppColors.whiteOpac,
+              iconColor: AppColors.blackColor,
+              errorBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red)),
+              border: OutlineInputBorder(
+                gapPadding: 10.0,
+                borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 0.1,
+                ),
+                borderRadius: BorderRadius.circular(radius),
+              ), 
+              
+              ),
+          obscureText: isObscure,
+          keyboardType: inputType,
+          controller: controller,
+          maxLines: maxLine,
+          validator: validator,
+          textAlign: textAlign,
+          style: TextStyle(fontSize: 15, color: AppColors.blackColor),
+          minLines: 1,
         ),
       ],
     );

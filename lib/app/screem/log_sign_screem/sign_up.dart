@@ -21,6 +21,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
   late bool signInLoading;
   late bool googleIsLoading;
   late bool facebookIsLoading;
+  late bool isObscure;
   TextEditingController textEditingControllerEmail = TextEditingController();
   TextEditingController textEditingControllerPassword = TextEditingController();
   TextEditingController textEditingControllerUserName = TextEditingController();
@@ -34,6 +35,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
     signInLoading = false;
     googleIsLoading = false;
     facebookIsLoading = false;
+    isObscure=false;
   }
 
   @override
@@ -57,11 +59,11 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
       children: [
         AppText(
           StringData.welcomVotify,
-          weight: FontWeight.bold,
           color: AppColors.blackColor,
+          size: 20.0,
         ),
         SizedBox(
-          height: heigth * .02,
+          height: heigth * .04,
         ),
         Form(
             key: _formKey = GlobalKey<FormState>(),
@@ -135,7 +137,18 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
 
                 //Password
                 AppInput(
-                    hasSuffix: false,
+                    hasSuffix: true,
+                    isObscure: isObscure,
+                    suffixIcon: IconButton(onPressed: (){
+                        setState(() {
+                          if (isObscure==true){
+                            isObscure=false;
+                          }else{
+                            isObscure=true;
+                          }
+                        });
+                    }, icon: Icon(Icons.remove_red_eye,color: AppColors.blackColor,
+                    )),
                     controller: textEditingControllerPassword,
                     label: "Mot de passe",
                     width: width,
@@ -151,7 +164,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
 
                 // Sign Up button
                 SizedBox(
-                  height: heigth * .02,
+                  height: heigth * .05,
                 ),
                 Center(
                   child: signInLoading

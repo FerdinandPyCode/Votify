@@ -26,18 +26,19 @@ class LastSplashScreem extends StatelessWidget {
               Image.asset(
                 AssetData.jouet,
                 width: width,
-                height: heigth * .4,
+                height: heigth * .5,
               ),
               SizedBox(
                 height: heigth * .05,
               ),
-              //SvgPicture.asset(AssetData.jouetS,width: width,height: heigth*.5,),
+             
 
               Container(
                 //Container description
+                margin: EdgeInsets.symmetric(vertical: 30.0),
                 padding: EdgeInsets.symmetric(
-                    vertical: heigth * .04, horizontal: width * .15),
-                height: heigth * .4,
+                    vertical: heigth * .04, horizontal: width * .1),
+                height: heigth * .3,
                 width: width,
                 decoration: BoxDecoration(
                     color: AppColors.backgroundColor,
@@ -51,6 +52,7 @@ class LastSplashScreem extends StatelessWidget {
                           blurRadius: 20.0,
                           blurStyle: BlurStyle.outer)
                     ]),
+
                 //Container child
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,

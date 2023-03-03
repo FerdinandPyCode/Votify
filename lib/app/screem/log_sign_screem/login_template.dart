@@ -45,12 +45,14 @@ class _LoginTemplateScreemState extends State<LoginTemplateScreem> {
                 Center(
                     child: Image.asset(
                   AssetData.appIcon,
-                  width: width * .7,
-                  height: heigth * .3,
+                  width: width * .8,
+                  height: heigth * .35,
                 )),
 
                 //Body of page
                 Container(
+                  padding: EdgeInsets.only(top: 5.0),
+                  width: double.infinity,
                   decoration: BoxDecoration(
                       color: AppColors.blueBgColor,
                       borderRadius: const BorderRadius.only(
@@ -81,7 +83,7 @@ class _LoginTemplateScreemState extends State<LoginTemplateScreem> {
                                 weight: isLogin
                                     ? FontWeight.bold
                                     : FontWeight.normal,
-                                size: isLogin ? heigth * .03 : heigth * .025,
+                                size: isLogin ? heigth * .025 : heigth * .02,
                                 color: isLogin
                                     ? AppColors.backgroundColor
                                     : AppColors.whiteOpac,
@@ -100,7 +102,7 @@ class _LoginTemplateScreemState extends State<LoginTemplateScreem> {
                                 weight: (!isLogin)
                                     ? FontWeight.bold
                                     : FontWeight.normal,
-                                size: (!isLogin) ? heigth * .03 : heigth * .025,
+                                size: (!isLogin) ? heigth * .025 : heigth * .02,
                                 color: (!isLogin)
                                     ? AppColors.backgroundColor
                                     : AppColors.whiteOpac,
@@ -109,8 +111,9 @@ class _LoginTemplateScreemState extends State<LoginTemplateScreem> {
                       ),
                       Container(
                         width: width,
+                        margin: EdgeInsets.only(top: 5.0),
                         padding: EdgeInsets.symmetric(
-                            vertical: heigth * .03, horizontal: width * .15),
+                            vertical: heigth * .04, horizontal: width * .15),
                         decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(30.0),
@@ -118,10 +121,12 @@ class _LoginTemplateScreemState extends State<LoginTemplateScreem> {
                             color: AppColors.backgroundColor),
                         child: Column(
                           children: [
-                            isLogin ? const LoginScreem() : const SignUpScreem()
+                            isLogin ? const LoginScreem() : const SignUpScreem(), 
+                            const SizedBox(height: 10.0,)
                           ],
                         ),
-                      )
+                      ), 
+                     
                     ],
                   ),
                 )

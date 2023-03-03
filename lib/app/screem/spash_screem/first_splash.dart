@@ -34,18 +34,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   Widget build(BuildContext context) {
     return TimerControllerListener(
       listener: (BuildContext context, TimerValue value) async {
-        // bool isToken = await HelperPreferences.checkKey("TOKEN_KEY");
-        // String token = "";
-        // bool authed = false;
-
-        // if (isToken) {
-        //   token = await HelperPreferences.retrieveStringValue("TOKEN_KEY");
-        //   if (Jwt.getExpiryDate(token)!.millisecondsSinceEpoch >
-        //       DateTime.now().millisecondsSinceEpoch) {
-        //     authed = true;
-        //   }
-        // }
-
+       
         if (ref.read(mAuthRef).currentUser != null) {
           ref.read(userAuth.notifier).userId =
               ref.read(mAuthRef).currentUser!.uid;
@@ -107,30 +96,3 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     );
   }
 }
-
-// class FirstSplashScreem extends StatelessWidget {
-//   const FirstSplashScreem({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     double width = MediaQuery.of(context).size.width;
-//     double heigth = MediaQuery.of(context).size.height;
-
-//     return AnimatedSplashScreen(
-//       nextScreen: const LastSplashScreem(),
-//       splash: Scaffold(
-//         backgroundColor: AppColors.backgroundColor,
-//         body: Center(
-//             child: Image.asset(
-//           AssetData.appIcon,
-//           width: double.infinity,
-//           height: MediaQuery.of(context).size.height,
-//           fit: BoxFit.cover,
-//         )),
-//       ),
-//       duration: 3000,
-//       splashTransition: SplashTransition.fadeTransition,
-//       pageTransitionType: PageTransitionType.rightToLeft,
-//     );
-//   }
-// }

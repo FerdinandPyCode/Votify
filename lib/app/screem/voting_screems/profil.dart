@@ -291,7 +291,7 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                       }),
                       leading: IconButton(
                         onPressed: () {
-                          _showDialog(context, action: () {
+                          _showDialog(context, action: () { 
                             setState(() {});
                           },
                               controller: _nameController,
