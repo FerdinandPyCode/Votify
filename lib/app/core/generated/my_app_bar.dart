@@ -3,7 +3,6 @@ import 'package:votify_2/app/core/constants/color.dart';
 import 'package:votify_2/app/core/generated/widgets/utils/utils.dart';
 import '../../screem/voting_screems/notification_screem.dart';
 import '../../screem/voting_screems/profil.dart';
-import '../constants/asset_data.dart';
 import 'package:badges/badges.dart' as badges;
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -17,7 +16,8 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
       required this.leadingWidget,
       this.nbrNotification = 1,
       this.isSecond = false,
-      this.disconnectWidget, this.profilUrl=''});
+      this.disconnectWidget,
+      this.profilUrl = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +58,19 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
                       MaterialPageRoute(
                           builder: (context) => const ProfilScreem()));
                 },
-                child: CircleAvatar(
-                  child: AppImageNetwork(url: UtilsFonction.profile,)
-                  //Image.asset(
-                            // profilUrl.isNotEmpty?profilUrl:AssetData.profilVotify,
-                              //width: 40.0,
-                             // height:40.0,
-                           // ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      child: AppImageNetwork(
+                    url: UtilsFonction.profile,
+                    fit: BoxFit.contain,
+                  )
+                      //Image.asset(
+                      // profilUrl.isNotEmpty?profilUrl:AssetData.profilVotify,
+                      //width: 40.0,
+                      // height:40.0,
+                      // ),
+                      ),
                 ),
               )
       ],

@@ -84,11 +84,11 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                         height: 90,
                         width: 90,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child:AppImageNetwork(
-                            url: profil,
-                          )//:Image.asset(AssetData.profilVotify),
-                        ),
+                            borderRadius: BorderRadius.circular(50),
+                            child: AppImageNetwork(
+                              url: profil,
+                            ) //:Image.asset(AssetData.profilVotify),
+                            ),
                       ),
                     ),
                     // profil != ''
@@ -157,7 +157,6 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                     color: AppColors.greySkyColor),
                 child: Column(
                   children: [
-                    
                     //Email
 
                     ListTile(
@@ -428,9 +427,15 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                     }
 
                     UserModel u = ref.read(userAuth).me.copyWith(
-                        username: _usernameController.text,
-                        firstName: _surnameController.text,
-                        lastName: _nameController.text,
+                        username: _usernameController.text != ''
+                            ? _usernameController.text
+                            : ref.read(userAuth).me.username,
+                        firstName: _surnameController.text != ''
+                            ? _surnameController.text
+                            : ref.read(userAuth).me.firstName,
+                        lastName: _nameController.text != ''
+                            ? _nameController.text
+                            : ref.read(userAuth).me.firstName,
                         profilePic: img);
                     await ref.read(userController).updateUser(u);
                     setState(() {
