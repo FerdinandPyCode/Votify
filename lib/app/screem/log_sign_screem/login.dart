@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_input.dart';
 import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
@@ -165,7 +164,7 @@ class _LoginScreemState extends ConsumerState<LoginScreem> {
                 SizedBox(
                   height: heigth * .06,
                 ),
-                Center(
+                /*Center(
                   child: AppText(
                     StringData.continueWith,
                     color: AppColors.blackColor,
@@ -251,7 +250,7 @@ class _LoginScreemState extends ConsumerState<LoginScreem> {
                         bgColor: AppColors.backgroundColor,
                         radius: 10.0),
                   ],
-                )
+                )*/
               ],
             ))
       ],

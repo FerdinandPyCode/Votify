@@ -217,8 +217,10 @@ class UserController {
   Future<bool> createUserFirebase(
     String mail,
     String pwd,
-    String username,
-  ) async {
+    String username, {
+    String firtsname = '',
+    String lastname = '',
+  }) async {
     final userCredential = await ref
         .read(mAuthRef)
         .createUserWithEmailAndPassword(email: mail, password: pwd);
@@ -230,6 +232,8 @@ class UserController {
             username: username,
             fcm: token,
             email: mail,
+            firstName: firtsname,
+            lastName: lastname,
             userId: ref.read(mAuthRef).currentUser!.uid);
         //Save the user
         await saveUser(userModel);

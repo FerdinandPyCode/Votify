@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
 import 'package:votify_2/app/screem/home_screem/home_screem.dart';
-import '../../core/constants/asset_data.dart';
 import '../../core/constants/color.dart';
 import '../../core/constants/strings.dart';
 import '../../core/generated/widgets/app_input_end_text_widget/app_input.dart';
@@ -25,6 +24,9 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
   TextEditingController textEditingControllerEmail = TextEditingController();
   TextEditingController textEditingControllerPassword = TextEditingController();
   TextEditingController textEditingControllerUserName = TextEditingController();
+  TextEditingController textEditingControllerFirstname =
+      TextEditingController();
+  TextEditingController textEditingControllerLastname = TextEditingController();
 
   @override
   void initState() {
@@ -32,6 +34,16 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
     signInLoading = false;
     googleIsLoading = false;
     facebookIsLoading = false;
+  }
+
+  @override
+  void dispose() {
+    textEditingControllerEmail.dispose();
+    textEditingControllerFirstname.dispose();
+    textEditingControllerLastname.dispose();
+    textEditingControllerPassword.dispose();
+    textEditingControllerUserName.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,10 +69,42 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
               children: [
                 //Username
                 AppInput(
-                    hint: StringData.userNameExemple,
+                    hint: "username",
                     hasSuffix: false,
                     controller: textEditingControllerUserName,
-                    label: StringData.userName,
+                    label: "Nom d'utilisateur",
+                    width: width,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return StringData.fieldError;
+                      }
+                      return null;
+                    }),
+                SizedBox(
+                  height: heigth * .02,
+                ),
+                //firstname
+                AppInput(
+                    hint: "John",
+                    hasSuffix: false,
+                    controller: textEditingControllerFirstname,
+                    label: "Prénom",
+                    width: width,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return StringData.fieldError;
+                      }
+                      return null;
+                    }),
+                SizedBox(
+                  height: heigth * .02,
+                ),
+                //Lastname
+                AppInput(
+                    hint: "DOE",
+                    hasSuffix: false,
+                    controller: textEditingControllerUserName,
+                    label: "Nom de famille",
                     width: width,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -93,7 +137,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
                 AppInput(
                     hasSuffix: false,
                     controller: textEditingControllerPassword,
-                    label: StringData.password,
+                    label: "Mot de passe",
                     width: width,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -138,7 +182,11 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
                                   .createUserFirebase(
                                       textEditingControllerEmail.text,
                                       textEditingControllerPassword.text,
-                                      textEditingControllerUserName.text)
+                                      textEditingControllerUserName.text,
+                                      firtsname:
+                                          textEditingControllerFirstname.text,
+                                      lastname:
+                                          textEditingControllerLastname.text)
                                   .then(
                                 (value) {
                                   if (value) {
@@ -179,7 +227,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
                 SizedBox(
                   height: heigth * .04,
                 ),
-                Center(
+                /*Center(
                   child: AppText(
                     StringData.continueWith,
                     color: AppColors.blackColor,
@@ -265,7 +313,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
                         bgColor: AppColors.backgroundColor,
                         radius: 10.0),
                   ],
-                ),
+                ),*/
                 SizedBox(
                   height: heigth * .1,
                 )
