@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:votify_2/app/core/constants/color.dart';
@@ -40,16 +44,47 @@ class UtilsFonction {
   }
 
 // for picking up image from gallery
-  static Future pickImage(ImageSource source) async {
+  static Future<String> pickImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
     if (image != null) {
-      return await image.readAsBytes();
+      return await image.path;
     }
     print('No Image Selected');
+    return '';
   }
 
   showSnackBar(BuildContext context, {required String text}) {
     return ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: AppText(text)));
+  }
+}
+const String default_user_pic = "https://madahst.com/wp-content/uploads/2020/08/ava.png";
+
+class AppImageNetwork extends StatelessWidget {
+  final String url;
+  final BoxFit fit;
+  final bool isProgress;
+
+  AppImageNetwork({Key? key, required this.url, this.fit = BoxFit.contain, this.isProgress = false}) : super(key: key);
+  String urrl = "";
+
+  @override
+  Widget build(BuildContext context) {
+    if (url.isEmpty) {
+      urrl = default_user_pic;
+    } else {
+      urrl = url;
+    }
+    return isProgress
+        ? const CupertinoActivityIndicator()
+        : urrl.startsWith('http')
+            ? CachedNetworkImage(
+                fit: fit,
+                placeholder: (BuildContext context, String url) {
+                  return const CupertinoActivityIndicator();
+                },
+                imageUrl: urrl,
+              )
+            : Image.file(File(urrl), fit: fit);
   }
 }

@@ -1,12 +1,16 @@
-import 'dart:typed_data';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:votify_2/app/core/constants/asset_data.dart';
 import 'package:votify_2/app/core/constants/strings.dart';
+import 'package:votify_2/app/core/generated/dynamique_button.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_simple_input.dart';
 import 'package:votify_2/app/core/generated/widgets/app_input_end_text_widget/app_text.dart';
+import 'package:votify_2/app/core/models/user_model.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/helper_preferences.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
@@ -27,14 +31,21 @@ class ProfilScreem extends ConsumerStatefulWidget {
 class _ProfilScreemState extends ConsumerState<ProfilScreem> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
-  final TextEditingController _mailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  Uint8List? _image;
+  //final TextEditingController _mailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+
+  String profil = '';
+  bool isLoading = false;
+
   void selectImage() async {
-    Uint8List im = await UtilsFonction.pickImage(ImageSource.gallery);
-    setState(() {
-      _image = im;
-    });
+    profil = await UtilsFonction.pickImage(ImageSource.gallery);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    profil = ref.read(userAuth).me.profilePic;
+    super.initState();
   }
 
   @override
@@ -59,40 +70,78 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: 30,
+              ),
               Center(
                 child: Stack(
                   clipBehavior: Clip.none,
                   alignment: Alignment.center,
                   children: [
-                    _image != null
-                        ? CircleAvatar(
-                            radius: 64,
-                            backgroundImage: MemoryImage(_image!),
-                          )
-                        : CircleAvatar(
-                            radius: 64,
-                            backgroundColor: AppColors.greySkyColor,
-                            backgroundImage: AssetImage(AssetData.google),
-                          ),
                     Positioned(
-                        bottom: -10,
-                        left: 80.0,
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 40.0,
-                          height: 40.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50.0),
-                              color: AppColors.blueBgColor),
-                          child: IconButton(
+                      child: SizedBox(
+                        height: 90,
+                        width: 90,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: AppImageNetwork(
+                            url: profil.isEmpty ? default_user_pic : profil,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // profil != ''
+                    //     ? CircleAvatar(
+                    //         radius: 64,
+                    //         backgroundImage: FileImage(File(profil)),
+                    //       )
+                    //     : CircleAvatar(
+                    //         radius: 64,
+                    //         backgroundColor: AppColors.greySkyColor,
+                    //         backgroundImage: AssetImage(AssetData.google),
+                    //       ),
+                    // AppImageNetwork(
+                    //   url: profil.isEmpty ? default_user_pic : profil,
+                    // ),
+                    // Positioned(
+                    //     bottom: -10,
+                    //     left: 80.0,
+                    //     child: Container(
+                    //       alignment: Alignment.center,
+                    //       width: 40.0,
+                    //       height: 40.0,
+                    //       decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(50.0),
+                    //           color: AppColors.blueBgColor),
+                    //       child: IconButton(
 
-                              //add photo button
-                              onPressed: selectImage,
-                              icon: Icon(
-                                Icons.add_a_photo,
-                                color: AppColors.backgroundColor,
-                              )),
-                        ))
+                    //           //add photo button
+                    //           onPressed: selectImage,
+                    //           icon: Icon(
+                    //             Icons.add_a_photo,
+                    //             color: AppColors.backgroundColor,
+                    //           )),
+                    //     ))
+                    Positioned(
+                      bottom: 6,
+                      right: 4,
+                      child: InkWell(
+                        onTap: () async {
+                          PickedFile? pickedFile = await ImagePicker()
+                              .getImage(source: ImageSource.gallery);
+                          if (pickedFile != null) {
+                            setState(() {
+                              profil = pickedFile.path;
+                            });
+                          }
+                        },
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 35,
+                          color: AppColors.blackColor,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -107,6 +156,96 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                     color: AppColors.greySkyColor),
                 child: Column(
                   children: [
+                    //Email
+
+                    ListTile(
+                      leading: IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.mail,
+                          color: AppColors.greyBlackColor,
+                        ),
+                      ),
+                      title: AppText(
+                        StringData.mail,
+                        color: AppColors.greyBlackColor,
+                        size: 12.0,
+                      ),
+                      subtitle: TextFormField(
+                        onTap: () {},
+                        validator: (value) {
+                          return null;
+                        },
+                        readOnly: true,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: ref.read(userAuth).me.email,
+                            hintStyle: TextStyle(
+                                color: AppColors.blackColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.0)),
+                      ),
+                    ),
+
+                    //Username
+                    ListTile(
+                      onTap: (() {
+                        _showDialog(context, action: () {
+                          setState(() {});
+                        },
+                            controller: _usernameController,
+                            hintText: 'username',
+                            title: 'Nom d\'utilisateur');
+                      }),
+                      leading: IconButton(
+                        onPressed: () {
+                          _showDialog(context, action: () {
+                            setState(() {});
+                          },
+                              controller: _usernameController,
+                              hintText: StringData.password,
+                              title:
+                                  '${StringData.enterYour}${StringData.password}');
+                        },
+                        icon: Icon(
+                          Icons.person,
+                          color: AppColors.greyBlackColor,
+                        ),
+                      ),
+                      title: AppText(
+                        'Nom d\'utilisateur',
+                        color: AppColors.greyBlackColor,
+                        size: 12.0,
+                      ),
+                      subtitle: TextFormField(
+                        onTap: () {
+                          _showDialog(context, action: () {
+                            setState(() {});
+                          },
+                              controller: _usernameController,
+                              hintText: 'username',
+                              title: 'Nom d\'utilisateur');
+                        },
+                        controller: _usernameController,
+                        validator: (value) {
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.edit,
+                                color: AppColors.blueBgColor,
+                              ),
+                            ),
+                            border: InputBorder.none,
+                            hintText: ref.watch(userAuth).me.username,
+                            hintStyle: TextStyle(
+                                color: AppColors.blackColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.0)),
+                      ),
+                    ),
                     //Name
                     ListTile(
                       onTap: (() {
@@ -139,6 +278,16 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                         size: 12.0,
                       ),
                       subtitle: TextFormField(
+                        onTap: () {
+                          _showDialog(context, action: () {
+                            setState(() {});
+                          },
+                              controller: _nameController,
+                              hintText:
+                                  StringData.userNameExemple.split(' ')[0],
+                              title:
+                                  '${StringData.enterYour}${StringData.name}');
+                        },
                         readOnly: true,
                         controller: _nameController,
                         validator: (value) {
@@ -197,6 +346,16 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                         size: 12.0,
                       ),
                       subtitle: TextFormField(
+                        onTap: () {
+                          _showDialog(context, action: () {
+                            setState(() {});
+                          },
+                              controller: _surnameController,
+                              hintText:
+                                  StringData.userNameExemple.split(' ')[1],
+                              title:
+                                  '${StringData.enterYour}${StringData.surname}');
+                        },
                         readOnly: true,
                         controller: _surnameController,
                         validator: (value) {
@@ -221,119 +380,69 @@ class _ProfilScreemState extends ConsumerState<ProfilScreem> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    //Email
 
-                    ListTile(
-                      onTap: (() {
-                        _showDialog(context, action: () {
-                          setState(() {});
-                        },
-                            controller: _mailController,
-                            hintText: StringData.mailExemple,
-                            title: '${StringData.enterYour}${StringData.mail}');
-                      }),
-                      leading: IconButton(
-                        onPressed: () {
-                          _showDialog(context, action: () {
-                            setState(() {});
-                          },
-                              controller: _mailController,
-                              hintText: StringData.mailExemple,
-                              title:
-                                  '${StringData.enterYour}${StringData.mail}');
-                        },
-                        icon: Icon(
-                          Icons.mail,
-                          color: AppColors.greyBlackColor,
-                        ),
-                      ),
-                      title: AppText(
-                        StringData.mail,
-                        color: AppColors.greyBlackColor,
-                        size: 12.0,
-                      ),
-                      subtitle: TextFormField(
-                        controller: _mailController,
-                        validator: (value) {
-                          return null;
-                        },
-                        readOnly: true,
-                        decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.edit,
-                                color: AppColors.blueBgColor,
-                              ),
-                            ),
-                            border: InputBorder.none,
-                            hintText: ref.read(userAuth).me.email,
-                            hintStyle: TextStyle(
-                                color: AppColors.blackColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17.0)),
-                      ),
-                    ),
                     const SizedBox(
                       height: 12.0,
                     ),
-
-                    //Password
-                    ListTile(
-                      onTap: (() {
-                        _showDialog(context, action: () {
-                          setState(() {});
-                        },
-                            controller: _nameController,
-                            hintText: StringData.password,
-                            title:
-                                '${StringData.enterYour}${StringData.password}');
-                      }),
-                      leading: IconButton(
-                        onPressed: () {
-                          _showDialog(context, action: () { 
-                            setState(() {});
-                          },
-                              controller: _nameController,
-                              hintText: StringData.password,
-                              title:
-                                  '${StringData.enterYour}${StringData.password}');
-                        },
-                        icon: Icon(
-                          Icons.lock,
-                          color: AppColors.greyBlackColor,
-                        ),
-                      ),
-                      title: AppText(
-                        StringData.password,
-                        color: AppColors.greyBlackColor,
-                        size: 12.0,
-                      ),
-                      subtitle: TextFormField(
-                        controller: _passwordController,
-                        validator: (value) {
-                          return null;
-                        },
-                        obscuringCharacter: '.',
-                        decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.edit,
-                                color: AppColors.blueBgColor,
-                              ),
-                            ),
-                            border: InputBorder.none,
-                            hintText: '***********',
-                            hintStyle: TextStyle(
-                                color: AppColors.blackColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17.0)),
-                      ),
-                    ),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              Center(
+                child: DynamiqueButton(
+                  childs: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      isLoading
+                          ? CupertinoActivityIndicator(
+                              radius: 10,
+                              color: AppColors.backgroundColor,
+                            )
+                          : AppText(
+                              "Save",
+                              color: AppColors.backgroundColor,
+                              size: 12.0,
+                            ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Image.asset(
+                        AssetData.go,
+                        color: AppColors.backgroundColor,
+                      )
+                    ],
+                  ),
+                  width: 100,
+                  height: 40,
+                  bgColor: AppColors.blueBgColor,
+                  radius: 10,
+                  action: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    String img = profil;
+                    if (!img.startsWith("http") && img.isNotEmpty) {
+                      img = await ref
+                          .read(userController)
+                          .addImageToStorage(File(img));
+                    }
+
+                    UserModel u = ref.read(userAuth).me.copyWith(
+                        username: _usernameController.text,
+                        firstName: _surnameController.text,
+                        lastName: _nameController.text,
+                        profilePic: img);
+                    await ref.read(userController).updateUser(u);
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Fluttertoast.showToast(
+                        msg: "Profile mis à jour avec succès !!!");
+                  },
+                ),
+              ),
             ],
           ),
         ),
