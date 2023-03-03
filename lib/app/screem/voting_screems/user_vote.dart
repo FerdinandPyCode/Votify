@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, await_only_futures
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -194,6 +194,7 @@ class _UserVoteTemplateState extends ConsumerState<UserVoteTemplate> {
                         });
                         Fluttertoast.showToast(
                             msg: "Vote vote a été éffectué avec succès !");
+                        await ref.refresh(fetchAllVote);
                         navigateToNextPage(context, const MyHomeScreem(),
                             back: false);
                       },

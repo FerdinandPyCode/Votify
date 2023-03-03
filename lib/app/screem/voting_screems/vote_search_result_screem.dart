@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:votify_2/app/core/models/user_vote_model.dart';
 import 'package:votify_2/app/core/models/vote_model.dart';
 import 'package:votify_2/app/core/utils/app_func.dart';
 import 'package:votify_2/app/core/utils/providers.dart';
+import 'package:votify_2/app/screem/voting_screems/final_vote.dart';
+import 'package:votify_2/app/screem/voting_screems/user_vote.dart';
 
 import '../../core/constants/color.dart';
 import '../../core/constants/strings.dart';
@@ -91,7 +94,6 @@ class _SearchVoteResultState extends ConsumerState<SearchVoteResult> {
                               child: CircularProgressIndicator(),
                             ))),
               ),
-
             ],
           )),
     );
@@ -124,7 +126,22 @@ class _SearchVoteResultState extends ConsumerState<SearchVoteResult> {
             nbrOptions: votes[index].listeOptions.length.toString(),
             nbrVotes: votes[index].listeVote.length.toString(),
             title: votes[index].title,
-            action: () {});
+            action: () {
+              bool can = true;
+
+              for (UserVote uV in votes[index].listeVote) {
+                if (uV.userId == ref.read(userAuth).userId) {
+                  can = false;
+                  break;
+                }
+              }
+
+              if (can) {
+                navigateToNextPage(context, UserVoteTemplate(votes[index]));
+              } else {
+                navigateToNextPage(context, FinalVoteTemplate(votes[index]));
+              }
+            });
       },
       shrinkWrap: true,
       itemCount: votes.length,
