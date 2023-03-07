@@ -12,23 +12,20 @@ class VoteController {
   VoteController(this.ref);
 
   Future<void> addVote(Vote vote) async {
-    if (DateTime.parse(vote.dateEnd).millisecondsSinceEpoch <
-        DateTime.now().millisecondsSinceEpoch) {
-      await ref.read(voteRef).add(vote.toMap());
+    await ref.read(voteRef).add(vote.toMap());
 
-      if (vote.electionType == 'PRIVATE') {
-        for (String mail in vote.votersEmail) {
-          NotifModel nM = NotifModel(
-              key: '',
-              title: 'Nouveau Vote Créé pour vous',
-              description: "Nouveau vote pour vous, passez à l'action !",
-              createdAt: DateTime.now().toString().substring(0, 19),
-              to: mail,
-              from: ref.read(userAuth).me.email,
-              type: "NEW VOTE",
-              seen: 0);
-          await ref.read(notifController).sendNotif(nM);
-        }
+    if (vote.electionType == 'PRIVATE') {
+      for (String mail in vote.votersEmail) {
+        NotifModel nM = NotifModel(
+            key: '',
+            title: 'Nouveau Vote Créé pour vous',
+            description: "Nouveau vote pour vous, passez à l'action !",
+            createdAt: DateTime.now().toString().substring(0, 19),
+            to: mail,
+            from: ref.read(userAuth).me.email,
+            type: "NEW VOTE",
+            seen: 0);
+        await ref.read(notifController).sendNotif(nM);
       }
     }
   }
@@ -42,7 +39,7 @@ class VoteController {
 
       Map<String, List<Vote>> votes = {"PRIVATE": [], "PUBLIC": []};
       for (Vote v in es) {
-        if (DateTime.parse(v.dateEnd).millisecondsSinceEpoch <
+        if (DateTime.parse(v.dateEnd).millisecondsSinceEpoch >
             DateTime.now().millisecondsSinceEpoch) {
           bool can = true;
 
@@ -80,7 +77,6 @@ class VoteController {
     for (Vote v in es) {
       if (DateTime.parse(v.dateState).millisecondsSinceEpoch <
           DateTime.now().millisecondsSinceEpoch) {
-
         if (v.electionType == "PUBLIC") {
           votes.add(v);
         } else {
