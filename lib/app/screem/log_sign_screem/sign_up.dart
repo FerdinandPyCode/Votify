@@ -35,7 +35,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
     signInLoading = false;
     googleIsLoading = false;
     facebookIsLoading = false;
-    isObscure=false;
+    isObscure = false;
   }
 
   @override
@@ -105,7 +105,7 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
                 AppInput(
                     hint: "DOE",
                     hasSuffix: false,
-                    controller: textEditingControllerUserName,
+                    controller: textEditingControllerLastname,
                     label: "Nom de famille",
                     width: width,
                     validator: (value) {
@@ -139,16 +139,20 @@ class _SignUpScreemState extends ConsumerState<SignUpScreem> {
                 AppInput(
                     hasSuffix: true,
                     isObscure: isObscure,
-                    suffixIcon: IconButton(onPressed: (){
-                        setState(() {
-                          if (isObscure==true){
-                            isObscure=false;
-                          }else{
-                            isObscure=true;
-                          }
-                        });
-                    }, icon: Icon(Icons.remove_red_eye,color: AppColors.blackColor,
-                    )),
+                    suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (isObscure == true) {
+                              isObscure = false;
+                            } else {
+                              isObscure = true;
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          Icons.remove_red_eye,
+                          color: AppColors.blackColor,
+                        )),
                     controller: textEditingControllerPassword,
                     label: "Mot de passe",
                     width: width,

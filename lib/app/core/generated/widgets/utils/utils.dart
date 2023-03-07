@@ -88,9 +88,6 @@ class AppImageNetwork extends StatelessWidget {
             ? Image.network(
                 urrl,
                 fit: fit,
-                loadingBuilder: (co, t0, t) {
-                  return Image.asset(AssetData.profilVotify);
-                },
               )
             : Image.file(File(urrl), fit: fit);
   }
