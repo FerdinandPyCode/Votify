@@ -223,6 +223,7 @@ class _FinalVoteTemplateState extends ConsumerState<FinalVoteTemplate> {
                                                   AppColors.greySkyColor,
                                               backgroundImage:
                                                   AssetImage(AssetData.google),
+                                              //liste[index].profilePic == '' ? AssetImage(AssetData.google) : (liste[index].profilePic), //? AssetImage(AssetData.google) : NetworkImage(liste[index].profilePic),
                                             ),
                                             const SizedBox(
                                               width: 10.0,
